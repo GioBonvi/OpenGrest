@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="TOP_LEFT" hgap="30" prefHeight="672.0" prefWidth="970.0" vgap="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controls.controlpane.ControlPaneController">
+    <padding><Insets bottom="10" left="5" right="5" top="10" /></padding>
+   <children> 
+       
+       <Button fx:id="applyButton" onAction="#handleApply" text="Applica" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="50.0" GridPane.rowIndex="5" />
+      <Label text="Titolo" />
+      <TextField fx:id="titleField" promptText="Titolo" GridPane.rowIndex="1" />
+      <Label text="Sottotitolo" GridPane.columnIndex="1" />
+      <TextField fx:id="subtitleField" promptText="Sottotitolo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ToggleButton fx:id="mainPaneToggleButton" mnemonicParsing="false" onAction="#handleMainPanelToggleButton" text="Principale" GridPane.rowIndex="4" />
+      <Label text="Data countdown" GridPane.columnIndex="2" />
+      <DatePicker fx:id="datePicker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Label text="Ora countdown" GridPane.columnIndex="3" />
+      <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <children>
+            <ComboBox fx:id="hourCombo" editable="true" prefWidth="150.0" promptText="Ora">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin></ComboBox>
+            <Label text=":" />
+            <ComboBox fx:id="minuteCombo" editable="true" prefWidth="150.0" promptText="Minuto">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></ComboBox>
+         </children>
+      </HBox>
+      <Label text="Obiettivo countdown" GridPane.columnIndex="4" />
+      <TextField fx:id="targetField" promptText="es: &quot;Inizio del Grest&quot;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+   </children>
+   <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+    
+</GridPane>
