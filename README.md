@@ -1,29 +1,29 @@
 # FreeGrest
 
-FreeGrest is an application used to manage media content (videos, music, text, images...) on an extended screen in a semplified way, through a Control Panel interface.
+Freegrest è un programma per gestire contenuto multimediale (video, musica, testo, immagini...) su uno schermo esteso proiettato visibile ad un pubblico.
 
-The advantage of this application is the ease of communication between two screen without direct interaction of user in the extended screen (which is usually difficult and disturbing for the specators.
+Il vantaggio di questa applicazione sta nella facilità di comunicazione fra i due schermi senza che ci sia interazione diretta dell'utente nello schermo esteso, cosa che è fastidiosa per il pubblico e difficile per l'utente che muove il mouse fra gli schermi. Inoltre OpenGrest permette di gestire molti contenuti in una sola finestra.
 
-This app is really a personal project, so you might find some unuseful functionalities - which are however useful for me ;) - the project is licensed under GNU GPL v3 so feel free to improve it or adapt it to your needs.
+Quest'applicazione è un progetto personale, sviluppato negli anni per esigenze personali - precisamente gestire il computer durante un Grest ;) - pertanto potreste trovare varie funzioni più fastidiose che utili. In ogni caso il progetto è rilasciato sotto licenza GNU GPL v3, quindi sentitevi liberi di sviluppare la vostra versione adatta alle vostre esigenze.
 
-## Functionalities
+## Funzionalità
 
-The app si substantialy composed of two windows: the control panel and the main panel.
+L'app è principalmente composta da due finestra: MainPanel e ControlPanel.
 
-The main panel must be placed on the extended monitor (it's recommended to maximise it), while the control panel can remain on the main screen, unseen from the public, but easily accessible by the user.
+MainPanel va posizionato sullo schermo esteso (consiglio di massimizzarlo su tutto lo schermo), mentre il ControlPanel deve rimanere sullo schermo principale, visibile solo all'utente che opera il computer.
 
-The main control panel lets you:
+Il ControlPanel permette di:
 
- - edit or hide the title and subtitle of the main panel;
+ - modificare o nascondere titolo e sottotitolo del MainPanel;
 
- - edit or hide the countdown to a precise date at the bottom of the main panel;
+ - modificare o nascondere il countdown verso una precisa data e ora in fondo al MainPanel;
 
- - add formatted text to the main panel (COMING SOON);
+ - aggiungere testo formattato (colore, stile e dimensione) al MainPanel;
 
- - add an image slideshow on the main panel (COMING SOON);
+ - aggiungere una slideshow di immagini al MainPanel (Work in progress);
 
- - add a media file (video or audio) on the main panel (COMING SOON);
+ - aggiungere una file medai (audio/video) al MainPanel con possibilità di autoplay e loop (Work in progress);
 
-## LICENSE
+## LICENZA
 
-FreeGrest is licensed under GNU GPL v3 (see the [LICENSE file](http://github.com/GioBonvi/FreeGrest/blob/master/README.md)).
+FreeGrest è rilasciato sotto licenza GNU GPL v3 (vedi il [file LICENSE](http://github.com/GioBonvi/FreeGrest/blob/master/LICENSE)).

@@ -21,7 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -36,28 +35,28 @@ import javafx.stage.Stage;
 
 public class ControlPaneController implements Initializable {
     
-    private MainPaneController mainController;
+    public MainPaneController mainController;
     private Stage mainStage;
     private Timeline oneSecTimeline;
-    private LocalDateTime targetDateTime;
+    public LocalDateTime targetDateTime;
     
-    @FXML private TextField titleField;
-    @FXML private TextField subtitleField;
-    @FXML private DatePicker datePicker;
-    @FXML private ComboBox minuteCombo;
-    @FXML private ComboBox hourCombo;
-    @FXML private TextField targetField;
-    @FXML private TextArea textArea;
-    @FXML private ComboBox fontStyleCombo;
-    @FXML private ComboBox fontColorCombo;
-    @FXML private ComboBox fontSizeCombo;
+    @FXML public TextField titleField;
+    @FXML public TextField subtitleField;
+    @FXML public DatePicker datePicker;
+    @FXML public ComboBox minuteCombo;
+    @FXML public ComboBox hourCombo;
+    @FXML public TextField targetField;
+    @FXML public TextArea textArea;
+    @FXML public ComboBox fontStyleCombo;
+    @FXML public ComboBox fontColorCombo;
+    @FXML public ComboBox fontSizeCombo;
     @FXML private Button addTextButton;
     @FXML private Button resetButton;
     @FXML private ToggleButton mainPaneToggleButton;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Setup mainController and mainStage.
+        // Setup mainController e mainStage.
         try
         {
             FXMLLoader loader = new FXMLLoader(
@@ -68,15 +67,16 @@ public class ControlPaneController implements Initializable {
             mainController = controller;
             
             mainStage = new Stage();
+            mainStage.setTitle("OpenGrest");
             mainStage.setScene(new Scene(root));
             
-            // Hide instead of closing
+            // Nascondi la finestra invece di chiuderla.
             mainStage.setOnCloseRequest(ev -> {
                 ev.consume();
                 mainStage.hide();
             });
             
-            // Save the position and dimensions when hiding.
+            // Salva posizione e dimensioni quando viene chiuso il MainPane.
             mainStage.setOnHiding(ev -> {
                 mainController.lastX = mainStage.getX();
                 mainController.lastY = mainStage.getY();
@@ -84,9 +84,9 @@ public class ControlPaneController implements Initializable {
                 mainController.lastH = mainStage.getHeight();
             });
             
-            // Restore saved position and dimensions when showing.
+            // Ripristina posizione e dimensioni salvate quando viene riaperto.
             mainStage.setOnShowing(ev -> {
-                // If any position is saved...
+                // Se ci sono delle posizioni salvate...
                 if (mainController.lastX > 0)
                 {
                     mainStage.setX(mainController.lastX);
@@ -96,18 +96,18 @@ public class ControlPaneController implements Initializable {
                 }
             });
             
-            // Bind showing/hiding to ToggleButton on the ControlPanel.
+            // Bind mostra/nascondi MainPane al pulsante nel Pannello di Controllo
             mainStage.showingProperty().addListener((obs, old_v, new_v) -> {
                 mainPaneToggleButton.setSelected(new_v);
             });
         }
         catch (java.io.IOException ioEx)
         {
-            System.err.println("Error loading the file /mainpane/MainPane.fxml");
+            System.err.println("Errore nel caricamenteo del file /mainpane/MainPane.fxml");
             ioEx.printStackTrace(System.err);
         }
         
-        // Fill the value of the combo boxes.
+        // Riempi i valori delle ComboBox
         for (int i = 0; i < 60; i++)
         {
             String val = i < 10 ? "0" + i : String.valueOf(i);
@@ -117,9 +117,9 @@ public class ControlPaneController implements Initializable {
                 hourCombo.getItems().add(val);
             }
         }
-        fontStyleCombo.getItems().addAll("None", "Bold", "Italic", "Bold Italic");
+        fontStyleCombo.getItems().addAll("Nessuno", "Grassetto", "Corsivo", "Grassetto corsivo");
         fontStyleCombo.getSelectionModel().select(0);
-        fontColorCombo.getItems().addAll("Black", "Red", "Blue", "Green");
+        fontColorCombo.getItems().addAll("Nero", "Rosso", "Blu", "Verde");
         fontColorCombo.getSelectionModel().select(0);
         for (int i = 10; i <= 80; i += 2)
         {
@@ -127,7 +127,7 @@ public class ControlPaneController implements Initializable {
         }
         fontSizeCombo.getSelectionModel().select(5);
         
-        // Provide a way to fire an event every second.
+        // Fornisce un modo per lanciare un evento al secondo.
         oneSecTimeline = new Timeline(
             new KeyFrame(
                 javafx.util.Duration.seconds(0),
@@ -141,7 +141,7 @@ public class ControlPaneController implements Initializable {
         oneSecTimeline.play();
     }
     
-    // Hide and show the main panel with the ToggleButton on the ControlPanel.
+    // Mostra o nascondi il MainPane con l'apposito pulsante nel ControlPane.
     @FXML void handleMainPanelToggleButton(ActionEvent ev)
     {
         if (mainPaneToggleButton.isSelected())
@@ -150,17 +150,17 @@ public class ControlPaneController implements Initializable {
             mainStage.hide();
     }
     
-    // Edit the title and subtitle of the main panel.
+    // Modifica titolo, sottotitolo e footer del MainPane.
     @FXML private void handleApply()
     {
-        // Apply title
+        // Titolo
         mainController.titleLabel.setText(titleField.getText());
-        // Apply subtitle
+        // Sottotitolo
         mainController.subtitleLabel.setText(subtitleField.getText());
         
-        // Apply footer (countdown).
+        // Footer (countdown).
         
-        // Extract minute and hour of the target time from the two comboboxes.
+        // Estrai ora e minuto dalle ComboBox (controllo validità numero).
         int min, hour;
         try
         {
@@ -178,17 +178,17 @@ public class ControlPaneController implements Initializable {
         {
             hour = 0;
         }
-        // Extract the value of the date from the datepicker.
-        // Watch out for null.
-        // Add the hour and minute previously obtained.
+        // Estrai la data dal DatePicker e controlla che non sia null.
+        // Aggiungi alla data l'ora e il minuto appena ottenuti.
         targetDateTime = datePicker.getValue() == null ? null : datePicker.getValue().atTime(hour, min);
-        // Bind to the new values.
+        // Imposta il footer con i valori adeguati.
         mainController.footerLabel.textProperty().bind(getDateDiff());
     }
     
+    // Aggiungi del testo formattato al MainPane.
     @FXML private void handleAddText()
     {
-        // Setup the font from the data on control panel.
+        // Imposta il font dalle ComboBox nel COntrolPane.
         int size;
         try
         {
@@ -205,7 +205,7 @@ public class ControlPaneController implements Initializable {
         FontPosture fontStyle = (styleIndex == 2 || styleIndex == 3 ? FontPosture.ITALIC : FontPosture.REGULAR);
         Font newFont = Font.font("System", fontWeight, fontStyle, size);
         
-        // Setup the color
+        // Imposta il colore.
         Paint fontColor;
         switch (fontColorCombo.getSelectionModel().getSelectedIndex())
         {
@@ -226,41 +226,47 @@ public class ControlPaneController implements Initializable {
                 break;
         }
         
-        // Add a new label with this font and color.
+        // Aggiungi una nuova Label al MainPane con questo testo, font e colore.
         Label newLbl = new Label();
         newLbl.setText(textArea.getText());
         newLbl.setFont(newFont);
         newLbl.setTextFill(fontColor);
         mainController.body.getChildren().add(newLbl);
+        textArea.setText("");
+    }
+    
+    @FXML private void handleResetButton()
+    {
+        mainController.body.getChildren().clear();
     }
     
     private StringBinding getDateDiff()
     {
-        // Return a static empty String if there is no date.
+        // Stringa vuota se la data è null.
         if (targetDateTime == null)
         {
             return Bindings.createStringBinding(() -> {return "";}, new SimpleStringProperty(""));
         }
-        // Otherwise return a StringBinding which contains the countdown and
-        // gets updated every second via the oneSecTimeline.
+        // Altrimenti restituisci uno StringBinding contenente il countdown che
+        // viene aggiornato ogni secondo dalla oneSecTimeline.
         return Bindings.createStringBinding(
                 () -> {
-                    // Get current time.
+                    // Ottiene instante attuale.
                     LocalDateTime now = LocalDate.now().atTime(
                             Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                             Calendar.getInstance().get(Calendar.MINUTE),
                             Calendar.getInstance().get(Calendar.SECOND)
                     );
-                    // Get duration between now and the target time.
+                    // Ottieni distanaza fra adesso e targetDateTime.
                     Duration dur = Duration.between(targetDateTime, now);
 
-                    // Build the message to be displayed.
+                    // Costruisci il messaggio da mostrare.
                     String message;
                     boolean needsSingular =
                             dur.abs().compareTo(Duration.ofDays(1)) >= 0
                             && dur.abs().compareTo(Duration.ofDays(2)) < 0;
-                    // dur.isNegative() == true means the date is in the future.
-                    // needsSingular == true means 1 day (instead of 0 dayS or 3 dayS).
+                    // dur.isNegative() == true significa che la data è nel futuro.
+                    // needsSingular == true significa 1 giornO invece che 0 giornI o 3 giornI etc.
                     if (dur.isNegative() && needsSingular)
                     {
                         message = targetField.getText().equals("") ? "" : targetField.getText() + ": ";
@@ -282,9 +288,9 @@ public class ControlPaneController implements Initializable {
                         message += "Sono passati %d giorni e %02d:%02d:%02d.";
                     }
                     
-                    // Take out the minus sign if present.
+                    // Elimina eventuale segno meno.
                     dur = dur.abs();
-                    // Calculate days, hours, minutes and seconds.
+                    // Calcola giorni, ore, minuti e secondi.
                     long s = dur.getSeconds();
                     long m = s / 60;
                     long h = m / 60;
@@ -292,10 +298,10 @@ public class ControlPaneController implements Initializable {
                     s = s % 60;
                     m = m % 60;
                     h = h % 24;
-                    // Display the final string with leading zeroes for time.
+                    // Mostra il messaggio finale in formato "g e hh:mm:ss"
                     return String.format(message, d, h, m, s);
                 },
-                // Update every second.
+                // Aggiorna ogni secondo.
                 oneSecTimeline.currentTimeProperty()
         );
     }
