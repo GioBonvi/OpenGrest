@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -39,6 +40,7 @@ public class ControlPaneController implements Initializable {
     @FXML private ComboBox minuteCombo;
     @FXML private ComboBox hourCombo;
     @FXML private TextField targetField;
+    @FXML private ChoiceBox fontStyleChoice;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,7 +94,20 @@ public class ControlPaneController implements Initializable {
             ioEx.printStackTrace(System.err);
         }
         
-        // Event every second.
+        // Fill the value of the combo boxes.
+        for (int i = 0; i < 60; i++)
+        {
+            String val = i < 10 ? "0" + i : String.valueOf(i);
+            minuteCombo.getItems().add(val);
+            if (i < 24)
+            {
+                hourCombo.getItems().add(val);
+            }
+        }
+        fontStyleChoice.getItems().addAll("None", "Bold", "Italic", "Bold Italic");
+        fontStyleChoice.getSelectionModel().select(0);
+        
+        // Provide a way to fire an event every second.
         oneSecTimeline = new Timeline(
             new KeyFrame(
                 javafx.util.Duration.seconds(0),

@@ -17,7 +17,7 @@
       <TextField fx:id="titleField" promptText="Titolo" GridPane.rowIndex="1" />
       <Label text="Sottotitolo" GridPane.columnIndex="1" />
       <TextField fx:id="subtitleField" promptText="Sottotitolo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <ToggleButton fx:id="mainPaneToggleButton" mnemonicParsing="false" onAction="#handleMainPanelToggleButton" text="Principale" GridPane.rowIndex="4" />
+      <ToggleButton fx:id="mainPaneToggleButton" mnemonicParsing="false" onAction="#handleMainPanelToggleButton" text="Principale" GridPane.columnIndex="4" GridPane.rowIndex="14" />
       <Label text="Data countdown" GridPane.columnIndex="2" />
       <DatePicker fx:id="datePicker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <Label text="Ora countdown" GridPane.columnIndex="3" />
@@ -36,6 +36,8 @@
       </HBox>
       <Label text="Obiettivo countdown" GridPane.columnIndex="4" />
       <TextField fx:id="targetField" promptText="es: &quot;Inizio del Grest&quot;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+      <TextArea maxHeight="137.0" prefHeight="52.0" prefWidth="329.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <ChoiceBox fx:id="fontStyleChoice" prefWidth="150.0" GridPane.rowIndex="4" />
    </children>
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
@@ -45,6 +47,12 @@
       <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints maxHeight="100.0" minHeight="25.0" percentHeight="0.0" prefHeight="100.0" />
+      <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />

@@ -26,4 +26,4 @@ The main control panel lets you:
 
 ## LICENSE
 
-FreeGrest is licensed under GNU GPL v3 (see the [LICENSE file](http://github.com/GioBonvi/FreeGrest/blob/master/README.md).
+FreeGrest is licensed under GNU GPL v3 (see the [LICENSE file](http://github.com/GioBonvi/FreeGrest/blob/master/README.md)).
