@@ -16,6 +16,8 @@ public class FreeGrest extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Pannello di controllo");
+        stage.setWidth(900);
+        stage.setHeight(600);
         stage.show();
     }
     

@@ -1,5 +1,6 @@
 package controls.controlpane;
 
+import javafx.scene.text.Font;
 import mainpane.MainPaneController;
 import java.net.URL;
 import java.time.Duration;
@@ -19,11 +20,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ControlPaneController implements Initializable {
@@ -35,12 +43,17 @@ public class ControlPaneController implements Initializable {
     
     @FXML private TextField titleField;
     @FXML private TextField subtitleField;
-    @FXML private ToggleButton mainPaneToggleButton;
     @FXML private DatePicker datePicker;
     @FXML private ComboBox minuteCombo;
     @FXML private ComboBox hourCombo;
     @FXML private TextField targetField;
-    @FXML private ChoiceBox fontStyleChoice;
+    @FXML private TextArea textArea;
+    @FXML private ComboBox fontStyleCombo;
+    @FXML private ComboBox fontColorCombo;
+    @FXML private ComboBox fontSizeCombo;
+    @FXML private Button addTextButton;
+    @FXML private Button resetButton;
+    @FXML private ToggleButton mainPaneToggleButton;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,8 +117,15 @@ public class ControlPaneController implements Initializable {
                 hourCombo.getItems().add(val);
             }
         }
-        fontStyleChoice.getItems().addAll("None", "Bold", "Italic", "Bold Italic");
-        fontStyleChoice.getSelectionModel().select(0);
+        fontStyleCombo.getItems().addAll("None", "Bold", "Italic", "Bold Italic");
+        fontStyleCombo.getSelectionModel().select(0);
+        fontColorCombo.getItems().addAll("Black", "Red", "Blue", "Green");
+        fontColorCombo.getSelectionModel().select(0);
+        for (int i = 10; i <= 80; i += 2)
+        {
+            fontSizeCombo.getItems().addAll(i);
+        }
+        fontSizeCombo.getSelectionModel().select(5);
         
         // Provide a way to fire an event every second.
         oneSecTimeline = new Timeline(
@@ -164,6 +184,54 @@ public class ControlPaneController implements Initializable {
         targetDateTime = datePicker.getValue() == null ? null : datePicker.getValue().atTime(hour, min);
         // Bind to the new values.
         mainController.footerLabel.textProperty().bind(getDateDiff());
+    }
+    
+    @FXML private void handleAddText()
+    {
+        // Setup the font from the data on control panel.
+        int size;
+        try
+        {
+            size = Integer.parseInt(
+                    fontSizeCombo.getSelectionModel().getSelectedItem().toString()
+            );
+        }
+        catch (Exception ex)
+        {
+            size = 20;
+        }
+        int styleIndex = fontStyleCombo.getSelectionModel().getSelectedIndex();
+        FontWeight fontWeight = (styleIndex == 1 || styleIndex == 3 ? FontWeight.BOLD : FontWeight.NORMAL);
+        FontPosture fontStyle = (styleIndex == 2 || styleIndex == 3 ? FontPosture.ITALIC : FontPosture.REGULAR);
+        Font newFont = Font.font("System", fontWeight, fontStyle, size);
+        
+        // Setup the color
+        Paint fontColor;
+        switch (fontColorCombo.getSelectionModel().getSelectedIndex())
+        {
+            case 0:
+                fontColor = Color.BLACK;
+                break;
+            case 1:
+                fontColor = Color.RED;
+                break;
+            case 2:
+                fontColor = Color.BLUE;
+                break;
+            case 3:
+                fontColor = Color.GREEN;
+                break;
+            default:
+                fontColor = Color.BLACK;
+                break;
+        }
+        
+        // Add a new label with this font and color.
+        Label newLbl = new Label();
+        newLbl.setText(textArea.getText());
+        newLbl.setFont(newFont);
+        newLbl.setTextFill(fontColor);
+        mainController.body.getChildren().add(newLbl);
     }
     
     private StringBinding getDateDiff()

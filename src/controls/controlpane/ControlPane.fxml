@@ -7,11 +7,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="TOP_LEFT" hgap="30" prefHeight="672.0" prefWidth="970.0" vgap="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controls.controlpane.ControlPaneController">
+<GridPane alignment="TOP_LEFT" hgap="30" prefHeight="650.0" prefWidth="862.0" vgap="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controls.controlpane.ControlPaneController">
     <padding><Insets bottom="10" left="5" right="5" top="10" /></padding>
    <children> 
-       
-       <Button fx:id="applyButton" onAction="#handleApply" text="Applica" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+      <Button fx:id="applyButton" onAction="#handleApply" text="Applica" GridPane.columnIndex="0" GridPane.rowIndex="2" />
       <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="50.0" GridPane.rowIndex="5" />
       <Label text="Titolo" />
       <TextField fx:id="titleField" promptText="Titolo" GridPane.rowIndex="1" />
@@ -36,13 +35,17 @@
       </HBox>
       <Label text="Obiettivo countdown" GridPane.columnIndex="4" />
       <TextField fx:id="targetField" promptText="es: &quot;Inizio del Grest&quot;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-      <TextArea maxHeight="137.0" prefHeight="52.0" prefWidth="329.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-      <ChoiceBox fx:id="fontStyleChoice" prefWidth="150.0" GridPane.rowIndex="4" />
+      <TextArea fx:id="textArea" maxHeight="137.0" prefHeight="52.0" prefWidth="329.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <ComboBox fx:id="fontSizeCombo" editable="true" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Button fx:id="addTextButton" mnemonicParsing="false" onAction="#handleAddText" text="Aggiungi" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+      <Button fx:id="resetButton" mnemonicParsing="false" text="Reset" GridPane.rowIndex="14" />
+      <ComboBox fx:id="fontStyleCombo" prefWidth="150.0" GridPane.rowIndex="4" />
+      <ComboBox fx:id="fontColorCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </children>
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="151.0" minWidth="75.0" prefWidth="133.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="75.0" />
    </columnConstraints>
@@ -52,11 +55,6 @@
       <RowConstraints />
       <RowConstraints maxHeight="100.0" minHeight="25.0" percentHeight="0.0" prefHeight="100.0" />
       <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" />
-      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />

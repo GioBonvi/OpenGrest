@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 public class MainPaneController implements Initializable
 {
@@ -16,6 +17,7 @@ public class MainPaneController implements Initializable
     @FXML public Label titleLabel;
     @FXML public Label subtitleLabel;
     @FXML public Label footerLabel;
+    @FXML public VBox body;
     
     @Override
     public void initialize(URL url, ResourceBundle rb)
