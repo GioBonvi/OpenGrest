@@ -1,6 +1,6 @@
-# FreeGrest
+# OpenGrest
 
-Freegrest è un programma per gestire contenuto multimediale (video, musica, testo, immagini...) su uno schermo esteso proiettato visibile ad un pubblico.
+OpenGrest è un programma per gestire contenuto multimediale (video, musica, testo, immagini...) su uno schermo esteso proiettato visibile ad un pubblico.
 
 Il vantaggio di questa applicazione sta nella facilità di comunicazione fra i due schermi senza che ci sia interazione diretta dell'utente nello schermo esteso, cosa che è fastidiosa per il pubblico e difficile per l'utente che muove il mouse fra gli schermi. Inoltre OpenGrest permette di gestire molti contenuti in una sola finestra.
 
@@ -26,4 +26,4 @@ Il ControlPanel permette di:
 
 ## LICENZA
 
-FreeGrest è rilasciato sotto licenza GNU GPL v3 (vedi il [file LICENSE](http://github.com/GioBonvi/FreeGrest/blob/master/LICENSE)).
+OpenGrest è rilasciato sotto licenza GNU GPL v3 (vedi il [file LICENSE](http://github.com/GioBonvi/OpenGrest/blob/master/LICENSE)).
