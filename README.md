@@ -20,9 +20,13 @@ Il ControlPanel permette di:
 
  - aggiungere testo formattato (colore, stile e dimensione) al MainPanel;
 
+ - aggiungere una file medai (audio/video) al MainPanel con possibilità di autoplay e loop;
+
  - aggiungere una slideshow di immagini al MainPanel (Work in progress);
 
- - aggiungere una file medai (audio/video) al MainPanel con possibilità di autoplay e loop (Work in progress);
+## Bug conosciuti
+
+Se si chiude il MainPanel con l'apposito pulsante sul ControlPanel mentre un video è in riproduzione a tutto schermo può succedere che la riproduzione continui all'infinito. In tal caso riavviare il programma.
 
 ## LICENZA
 

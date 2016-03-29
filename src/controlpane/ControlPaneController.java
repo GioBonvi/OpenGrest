@@ -1,8 +1,11 @@
 package controlpane;
 
+import java.io.File;
 import javafx.scene.text.Font;
 import mainpane.MainPaneController;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,11 +31,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import mediacontrol.MediaControl;
 
 public class ControlPaneController implements Initializable {
     
@@ -40,6 +46,7 @@ public class ControlPaneController implements Initializable {
     private Stage mainStage;
     private Timeline oneSecTimeline;
     public LocalDateTime targetDateTime;
+    private Media mediaFile;
     
     // Opzioni principali.
     @FXML public TextField titleField;
@@ -53,15 +60,12 @@ public class ControlPaneController implements Initializable {
     @FXML public ComboBox fontStyleCombo;
     @FXML public ComboBox fontColorCombo;
     @FXML public ComboBox fontSizeCombo;
-    @FXML private Button addTextButton;
     // Controllo file media.
     @FXML private CheckBox autoplayCheckbox;
     @FXML private CheckBox loopCheckbox;
     @FXML private Label mediaFileNameLabel;
-    @FXML private Button chooseMediaFileButton;
-    @FXML private Button showMediaFileButton;
+    @FXML private Button addMediaFileButton;
     // Controllo MainPane.
-    @FXML private Button resetButton;
     @FXML private ToggleButton mainPaneToggleButton;
     
     @Override
@@ -85,25 +89,26 @@ public class ControlPaneController implements Initializable {
                 ev.consume();
                 mainStage.hide();
             });
-            
-            // Salva posizione e dimensioni quando viene chiuso il MainPane.
+                        
+            // Chiudi tutti i Media prima di nascondere.
             mainStage.setOnHiding(ev -> {
-                mainController.lastX = mainStage.getX();
-                mainController.lastY = mainStage.getY();
-                mainController.lastW = mainStage.getWidth();
-                mainController.lastH = mainStage.getHeight();
+                mainController.terminateAll();
             });
             
-            // Ripristina posizione e dimensioni salvate quando viene riaperto.
             mainStage.setOnShowing(ev -> {
-                // Se ci sono delle posizioni salvate...
-                if (mainController.lastX > 0)
+                // Ripristina posizione e dimensioni salvate quando viene riaperto.
+                if (mainController.lastX.doubleValue() != -1.0)
                 {
-                    mainStage.setX(mainController.lastX);
-                    mainStage.setY(mainController.lastY);
-                    mainStage.setWidth(mainController.lastW);
-                    mainStage.setHeight(mainController.lastH);
+                    mainStage.setX(mainController.lastX.doubleValue());
+                    mainStage.setY(mainController.lastY.doubleValue());
+                    mainStage.setWidth(mainController.lastW.doubleValue());
+                    mainStage.setHeight(mainController.lastH.doubleValue());
                 }
+                // Salva costantemente dimensioni e posizione del MainPane.
+                mainController.lastX.bind( mainStage.xProperty());
+                mainController.lastY.bind( mainStage.yProperty());
+                mainController.lastW.bind( mainStage.widthProperty());
+                mainController.lastH.bind( mainStage.heightProperty());
             });
             
             // Bind mostra/nascondi MainPane al pulsante nel Pannello di Controllo
@@ -245,9 +250,72 @@ public class ControlPaneController implements Initializable {
         textArea.setText("");
     }
     
+    // Apri la schermata per scegliere un file multimediale.
+    @FXML private void handleChooseMediaFileButton()
+    {
+        FileChooser fc = new FileChooser();
+        Stage fcStage = new Stage();
+        fcStage.setTitle("Scegli un file multimediale");
+        // Apri la cartella ./Media se esiste.
+        if (Files.exists(Paths.get("./Media")))
+        {
+            fc.setInitialDirectory(
+                new File("./Media")
+            );
+        }
+        // Imposta i filtri per file multimediali supportati da Media.
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Tutti i file multimediali",
+                        "*.aif", "*.aiff", "*.flv", "*.fxm", "*.mp4", "*.m4a",
+                        "*.m4v", "*.mp3", "*.wav", "*.m3u8"),
+                new FileChooser.ExtensionFilter("File AIF", "*.aif", "*.aiff"),
+                new FileChooser.ExtensionFilter("File FLV", "*.flv", "*.fxm"),
+                new FileChooser.ExtensionFilter("File MP4", "*.mp4", "*.m4a", "*.m4v"),
+                new FileChooser.ExtensionFilter("File MP3", "*.mp3"),
+                new FileChooser.ExtensionFilter("File WAV", "*.wav"),
+                new FileChooser.ExtensionFilter("File HLS", "*.m3u8")
+            );
+        File file = fc.showOpenDialog(fcStage);
+        if (file != null)
+        {
+            // Controllo che il file sia effettivamente supportato.
+            try
+            {
+                mediaFile = new Media(file.toURI().toString());
+                mediaFileNameLabel.setText(file.getName());
+                addMediaFileButton.setDisable(false);
+            }
+            catch (Exception ex)
+            {
+                System.err.println("Formato del media \"" + file.getName() + "\" non supportato!");
+                ex.printStackTrace(System.err);
+                mediaFileNameLabel.setText("Nessun file selezionato");
+                addMediaFileButton.setDisable(true);
+            }
+        }
+    }
+    
+    @FXML private void handleAddMediaFileButton()
+    {
+        if (mediaFile != null)
+        {
+            mainController.body.getChildren().add(new MediaControl(
+                    mediaFile,
+                    autoplayCheckbox.isSelected(),
+                    (loopCheckbox.isSelected() ? -1 : 1)
+            ));
+            // Reset impostazioni media.
+            autoplayCheckbox.setSelected(false);
+            loopCheckbox.setSelected(false);
+            mediaFileNameLabel.setText("Nessun file selezionato");
+            mediaFile = null;
+        }
+        addMediaFileButton.setDisable(true);
+    }
+    
     @FXML private void handleResetButton()
     {
-        mainController.body.getChildren().clear();
+        mainController.terminateClearAll();
     }
     
     private StringBinding getDateDiff()

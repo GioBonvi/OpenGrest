@@ -58,7 +58,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <CheckBox fx:id="autoplayCheckBox" mnemonicParsing="false" text="Autoplay" GridPane.rowIndex="8" />
+      <CheckBox fx:id="autoplayCheckbox" mnemonicParsing="false" text="Autoplay" GridPane.rowIndex="8" />
       <TextArea fx:id="textArea" prefHeight="26.0" prefWidth="117.0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
       <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
          <children>
@@ -72,10 +72,10 @@
             <ComboBox fx:id="fontSizeCombo" editable="true" prefWidth="150.0" />
          </children>
       </VBox>
-      <CheckBox fx:id="loopCheckBox" mnemonicParsing="false" text="Loop" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label fx:id="mediaFileNameLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-      <Button fx:id="chooseMediaFileButton" mnemonicParsing="false" text="Sfoglia" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-      <Button fx:id="showMediaFileButton" mnemonicParsing="false" text="Mostra" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+      <CheckBox fx:id="loopCheckbox" mnemonicParsing="false" text="Loop" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label fx:id="mediaFileNameLabel" text="Nessun file selezionato" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+      <Button fx:id="chooseMediaFileButton" mnemonicParsing="false" onAction="#handleChooseMediaFileButton" text="Sfoglia" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+      <Button fx:id="addMediaFileButton" disable="true" mnemonicParsing="false" onAction="#handleAddMediaFileButton" text="Aggiungi" GridPane.columnIndex="4" GridPane.rowIndex="8" />
    </children>
    <columnConstraints>
       <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />

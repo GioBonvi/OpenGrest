@@ -35,13 +35,12 @@ public class OpenGrest extends Application {
             {
                 try
                 {
-                    System.out.println("File configurazione esistente");
                     // Leggi file di configurazione.
                     List<String> lines = Files.readAllLines(configFile);
-                    controller.mainController.lastX = Float.parseFloat(lines.get(0));
-                    controller.mainController.lastY = Float.parseFloat(lines.get(1));
-                    controller.mainController.lastW = Float.parseFloat(lines.get(2));
-                    controller.mainController.lastH = Float.parseFloat(lines.get(3));
+                    controller.mainController.lastX.set(Float.parseFloat(lines.get(0)));
+                    controller.mainController.lastY.set(Float.parseFloat(lines.get(1)));
+                    controller.mainController.lastW.set(Float.parseFloat(lines.get(2)));
+                    controller.mainController.lastH.set(Float.parseFloat(lines.get(3)));
                     controller.titleField.setText(lines.get(4));
                     controller.subtitleField.setText(lines.get(5));
                     if (! lines.get(6).equals("0"))
@@ -97,11 +96,17 @@ public class OpenGrest extends Application {
         try (PrintWriter writer = new PrintWriter("settings.conf", "UTF-8"))
         {
             // Salva le dimensioni di MainPane.
+            
+            writer.println(controller.mainController.lastX.doubleValue());
+            writer.println(controller.mainController.lastY.doubleValue());
+            writer.println(controller.mainController.lastW.doubleValue());
+            writer.println(controller.mainController.lastH.doubleValue());
+            /*
             writer.println(controller.mainController.lastX);
             writer.println(controller.mainController.lastY);
             writer.println(controller.mainController.lastW);
             writer.println(controller.mainController.lastH);
-            
+            */
             // Salva il contenuto di ControlPane.
             writer.println(controller.titleField.getText());
             writer.println(controller.subtitleField.getText());
