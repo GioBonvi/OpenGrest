@@ -1,6 +1,6 @@
 package opengrest;
 
-import controls.controlpane.ControlPaneController;
+import controlpane.ControlPaneController;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,8 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +25,7 @@ public class OpenGrest extends Application {
         try
         {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/controls/controlpane/ControlPane.fxml")
+                getClass().getResource("/controlpane/ControlPane.fxml")
             );
             Parent root = (Parent) loader.load();
             controller = loader.getController();

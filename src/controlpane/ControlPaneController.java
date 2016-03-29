@@ -1,4 +1,4 @@
-package controls.controlpane;
+package controlpane;
 
 import javafx.scene.text.Font;
 import mainpane.MainPaneController;
@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -40,17 +41,26 @@ public class ControlPaneController implements Initializable {
     private Timeline oneSecTimeline;
     public LocalDateTime targetDateTime;
     
+    // Opzioni principali.
     @FXML public TextField titleField;
     @FXML public TextField subtitleField;
     @FXML public DatePicker datePicker;
     @FXML public ComboBox minuteCombo;
     @FXML public ComboBox hourCombo;
     @FXML public TextField targetField;
+    // Controllo testo.
     @FXML public TextArea textArea;
     @FXML public ComboBox fontStyleCombo;
     @FXML public ComboBox fontColorCombo;
     @FXML public ComboBox fontSizeCombo;
     @FXML private Button addTextButton;
+    // Controllo file media.
+    @FXML private CheckBox autoplayCheckbox;
+    @FXML private CheckBox loopCheckbox;
+    @FXML private Label mediaFileNameLabel;
+    @FXML private Button chooseMediaFileButton;
+    @FXML private Button showMediaFileButton;
+    // Controllo MainPane.
     @FXML private Button resetButton;
     @FXML private ToggleButton mainPaneToggleButton;
     
