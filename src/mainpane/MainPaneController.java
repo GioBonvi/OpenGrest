@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import mediacontrol.MediaControl;
@@ -26,6 +27,7 @@ public class MainPaneController implements Initializable
     @FXML public Label titleLabel;
     @FXML public Label subtitleLabel;
     @FXML public Label footerLabel;
+    @FXML public ScrollPane bodyScroll;
     @FXML public VBox body;
     
     public boolean terminateAll()

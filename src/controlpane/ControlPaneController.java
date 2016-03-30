@@ -18,6 +18,7 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -90,6 +91,13 @@ public class ControlPaneController implements Initializable {
             mainStage.setTitle("OpenGrest");
             mainStage.setScene(new Scene(root));
             
+            // Espandi orizzontalmente per tutto lo spazio possibile.
+            mainController.body.minWidthProperty().bind(mainController.bodyScroll.widthProperty().subtract(20));
+            // Scorri in fondo ogni volta che vengono aggiunti elementi.
+            mainController.body.heightProperty().addListener( (ov, t, t1) -> {
+                 mainController.bodyScroll.setVvalue(1); 
+            }) ;
+            
             // Nascondi la finestra invece di chiuderla.
             mainStage.setOnCloseRequest(ev -> {
                 ev.consume();
@@ -119,7 +127,7 @@ public class ControlPaneController implements Initializable {
                 mainController.lastY.bind( mainStage.yProperty());
                 mainController.lastW.bind( mainStage.widthProperty());
                 mainController.lastH.bind( mainStage.heightProperty());
-                mainController.isMaximized.set(mainStage.isMaximized());
+                mainController.isMaximized.bind(mainStage.maximizedProperty());
             });
             
             // Bind mostra/nascondi MainPane al pulsante nel Pannello di Controllo
@@ -298,6 +306,9 @@ public class ControlPaneController implements Initializable {
         newLbl.setTextFill(fontColor);
         mainController.body.getChildren().add(newLbl);
         textArea.setText("");
+        
+        // Vai al fondo dello scroll.
+        mainController.bodyScroll.setVvalue(1);
     }
     
     // Apri la schermata per scegliere un file multimediale.
