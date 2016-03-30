@@ -1,5 +1,6 @@
 package controlpane;
 
+import alertexception.AlertException;
 import java.io.File;
 import javafx.scene.text.Font;
 import mainpane.MainPaneController;
@@ -23,6 +24,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -43,7 +46,7 @@ import mediacontrol.MediaControl;
 public class ControlPaneController implements Initializable {
     
     public MainPaneController mainController;
-    private Stage mainStage;
+    public Stage mainStage;
     private Timeline oneSecTimeline;
     public LocalDateTime targetDateTime;
     private Media mediaFile;
@@ -60,6 +63,7 @@ public class ControlPaneController implements Initializable {
     @FXML public ComboBox fontStyleCombo;
     @FXML public ComboBox fontColorCombo;
     @FXML public ComboBox fontSizeCombo;
+    @FXML public Button addTextButton;
     // Controllo file media.
     @FXML private CheckBox autoplayCheckbox;
     @FXML private CheckBox loopCheckbox;
@@ -92,7 +96,10 @@ public class ControlPaneController implements Initializable {
                         
             // Chiudi tutti i Media prima di nascondere.
             mainStage.setOnHiding(ev -> {
-                mainController.terminateAll();
+                if (! mainController.terminateAll())
+                {
+                    System.out.println("Chiudi i file multimediali a tutto schermo!");
+                }
             });
             
             mainStage.setOnShowing(ev -> {
@@ -118,8 +125,12 @@ public class ControlPaneController implements Initializable {
         }
         catch (java.io.IOException ioEx)
         {
-            System.err.println("Errore nel caricamenteo del file /mainpane/MainPane.fxml");
-            ioEx.printStackTrace(System.err);
+            AlertException.show(
+                    "Errore nel caricamento del file!",
+                    "Errore interno al programma.",
+                    "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
+                    ioEx
+            );
         }
         
         // Riempi i valori delle ComboBox
@@ -142,6 +153,9 @@ public class ControlPaneController implements Initializable {
         }
         fontSizeCombo.getSelectionModel().select(5);
         
+        // Permetti di aggiungere testo solo se textArea contiene qualcosa.
+        addTextButton.disableProperty().bind(textArea.textProperty().isEqualTo(""));
+        
         // Fornisce un modo per lanciare un evento al secondo.
         oneSecTimeline = new Timeline(
             new KeyFrame(
@@ -160,9 +174,26 @@ public class ControlPaneController implements Initializable {
     @FXML void handleMainPanelToggleButton(ActionEvent ev)
     {
         if (mainPaneToggleButton.isSelected())
+        {
             mainStage.show();
+        }
         else
-            mainStage.hide();
+        {
+            if (mainController.terminateAll())
+            {
+                mainStage.hide();
+            }
+            else
+            {
+                ev.consume();
+                mainPaneToggleButton.setSelected(true);
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Impossibile proseguire!");
+                alert.setHeaderText("Impossibile nascondere il pannello principale!");
+                alert.setContentText("Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare.");
+                alert.showAndWait();
+            }
+        }
     }
     
     // Modifica titolo, sottotitolo e footer del MainPane.
@@ -203,7 +234,7 @@ public class ControlPaneController implements Initializable {
     // Aggiungi del testo formattato al MainPane.
     @FXML private void handleAddText()
     {
-        // Imposta il font dalle ComboBox nel COntrolPane.
+        // Imposta il font dalle ComboBox nel ControlPane.
         int size;
         try
         {
@@ -287,8 +318,12 @@ public class ControlPaneController implements Initializable {
             }
             catch (Exception ex)
             {
-                System.err.println("Formato del media \"" + file.getName() + "\" non supportato!");
-                ex.printStackTrace(System.err);
+                AlertException.show(
+                        "Errore nel caricamento del file!",
+                        "Formato non supportato",
+                        "Il formato del media \"" + file.getName() + "\" non supportato!",
+                        ex
+                );
                 mediaFileNameLabel.setText("Nessun file selezionato");
                 addMediaFileButton.setDisable(true);
             }
@@ -315,7 +350,18 @@ public class ControlPaneController implements Initializable {
     
     @FXML private void handleResetButton()
     {
-        mainController.terminateClearAll();
+        if (mainController.terminateAll())
+        {
+            mainController.body.getChildren().clear();
+        }
+        else
+        {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Impossibile proseguire!");
+            alert.setHeaderText("Impossibile resettare il pannello principale!");
+            alert.setContentText("Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare.");
+            alert.showAndWait();
+        }
     }
     
     private StringBinding getDateDiff()

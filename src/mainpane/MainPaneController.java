@@ -6,6 +6,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import mediacontrol.MediaControl;
@@ -22,29 +23,26 @@ public class MainPaneController implements Initializable
     @FXML public Label footerLabel;
     @FXML public VBox body;
     
-    public void terminateAll()
+    public boolean terminateAll()
     {
-        body.getChildren().forEach((node) -> {
-            if (node.getClass() == MediaControl.class)
-            {
-                ((MediaControl) node).abortFullScreen();
-                ((MediaControl) node).mw.getMediaPlayer().stop();
-            }
-                
-        });
-    }
     
-    public void terminateClearAll()
-    {
-        body.getChildren().forEach((node) -> {
+        boolean canIClose = true;
+        
+        for(Node node: body.getChildren())
+        {
             if (node.getClass() == MediaControl.class)
             {
-                ((MediaControl) node).abortFullScreen();
-                ((MediaControl) node).pauseMedia();
-            }
-                
-        });
-        body.getChildren().clear();
+                if (((MediaControl) node).fullScreenMediaControl != null)
+                {
+                    canIClose = false;
+                }
+                else
+                {
+                    ((MediaControl) node).pauseMedia();
+                }
+            }                
+        }
+        return canIClose;
     }
     
     @Override

@@ -1,0 +1,11 @@
+#root {
+    -fx-background: #000000;
+}
+
+#displayTime {
+    -fx-text-fill: white;
+}
+
+#controlBar {
+    -fx-background-color: linear-gradient(rgba(22%, 22%, 22%, 0) 0%, rgba(22%, 22%, 22%, 0.5) 25%, rgba(22%, 22%, 22%, 1) 100%);
+}

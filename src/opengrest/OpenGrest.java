@@ -1,5 +1,6 @@
 package opengrest;
 
+import alertexception.AlertException;
 import controlpane.ControlPaneController;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,8 +69,13 @@ public class OpenGrest extends Application {
                 }
                 catch (IOException | NumberFormatException ex)
                 {
-                    System.err.println("Errore nella lettura delle preferenze.");
-                    ex.printStackTrace(System.err);
+                    AlertException.show(
+                        "Errore nella lettura del file!",
+                        "Valori inattesi nel file di configurazione.",
+                        "Errore nella lettura della configurazione salvata (file settings.conf).\n"
+                                + "Questo errore dovrebbe risolversi da solo al prossimo avvio del programma.",
+                        ex
+                    );
                 }
             }
             
@@ -82,8 +88,12 @@ public class OpenGrest extends Application {
         }
         catch (java.io.IOException ioEx)
         {
-            System.err.println("Errore nel caricamento del file /mainpane/MainPane.fxml");
-            ioEx.printStackTrace(System.err);
+            AlertException.show(
+                    "Errore nel caricamento del file!",
+                    "Errore interno al programma.",
+                    "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
+                    ioEx
+            );
         }
     }
     
@@ -101,12 +111,6 @@ public class OpenGrest extends Application {
             writer.println(controller.mainController.lastY.doubleValue());
             writer.println(controller.mainController.lastW.doubleValue());
             writer.println(controller.mainController.lastH.doubleValue());
-            /*
-            writer.println(controller.mainController.lastX);
-            writer.println(controller.mainController.lastY);
-            writer.println(controller.mainController.lastW);
-            writer.println(controller.mainController.lastH);
-            */
             // Salva il contenuto di ControlPane.
             writer.println(controller.titleField.getText());
             writer.println(controller.subtitleField.getText());
@@ -137,15 +141,26 @@ public class OpenGrest extends Application {
         }
         catch (FileNotFoundException ex)
         {
-            System.err.println("Errore nel caricamento del file di impostazioni settings.conf");
-            ex.printStackTrace(System.err);
-            
+            AlertException.show(
+                "Errore nel caricamento del file!",
+                "File non trovato.",
+                "Errore nel caricamento del file di impostazioni settings.conf\n"
+                        + "Questo errore dovrebbe risolversi da solo al prossimo avvio del programma.",
+                ex
+            );            
         }
         catch (UnsupportedEncodingException ex)
         {
-            System.err.println("Errore nella gestione della codifica del file settings.conf");
-            ex.printStackTrace(System.err);
+            AlertException.show(
+                "Errore nel caricamento del file!",
+                "Errore di codifica.",
+                "Errore nella gestione della codifica del file settings.conf\n"
+                        + "Questo errore dovrebbe risolversi da solo al prossimo avvio del programma.",
+                ex
+            );
         }
+        // Chiudi pannello principale quando viene chiuso il pannello di controllo.
+        controller.mainStage.hide();
     }
     
 }
