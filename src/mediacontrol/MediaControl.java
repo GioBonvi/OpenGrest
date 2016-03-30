@@ -346,8 +346,7 @@ public class MediaControl extends StackPane
                 Rectangle2D bounds = Screen.getScreens().get(1).getBounds();
                 stage.setX(bounds.getMinX());
                 stage.setY(bounds.getMinY());
-                stage.setWidth(bounds.getWidth());
-                stage.setHeight(bounds.getHeight());
+                stage.setMaximized(true);
             }
             else
             {

@@ -28,6 +28,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -58,6 +59,7 @@ public class ControlPaneController implements Initializable {
     @FXML public ComboBox minuteCombo;
     @FXML public ComboBox hourCombo;
     @FXML public TextField targetField;
+    @FXML public ColorPicker backgroundColorPicker;
     // Controllo testo.
     @FXML public TextArea textArea;
     @FXML public ComboBox fontStyleCombo;
@@ -110,12 +112,14 @@ public class ControlPaneController implements Initializable {
                     mainStage.setY(mainController.lastY.doubleValue());
                     mainStage.setWidth(mainController.lastW.doubleValue());
                     mainStage.setHeight(mainController.lastH.doubleValue());
+                    mainStage.setMaximized(mainController.isMaximized.get());
                 }
                 // Salva costantemente dimensioni e posizione del MainPane.
                 mainController.lastX.bind( mainStage.xProperty());
                 mainController.lastY.bind( mainStage.yProperty());
                 mainController.lastW.bind( mainStage.widthProperty());
                 mainController.lastH.bind( mainStage.heightProperty());
+                mainController.isMaximized.set(mainStage.isMaximized());
             });
             
             // Bind mostra/nascondi MainPane al pulsante nel Pannello di Controllo
@@ -229,6 +233,21 @@ public class ControlPaneController implements Initializable {
         targetDateTime = datePicker.getValue() == null ? null : datePicker.getValue().atTime(hour, min);
         // Imposta il footer con i valori adeguati.
         mainController.footerLabel.textProperty().bind(getDateDiff());
+        
+        // Imposta il colore di sfondo.
+        Color newColor = backgroundColorPicker.getValue();
+        if (newColor != null)
+        {
+            String newStyle = "-fx-background: rgb("
+                    + (int) (newColor.getRed() * 255) + ","
+                    + (int) (newColor.getGreen() * 255) + ","
+                    + (int) (newColor.getBlue() * 255) + ")";
+            
+            mainController.rootPane.setStyle(newStyle);
+            mainController.rootPane.getChildren().forEach(child -> {
+                child.setStyle(newStyle);
+            });
+        }
     }
     
     // Aggiungi del testo formattato al MainPane.
