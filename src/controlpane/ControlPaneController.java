@@ -1,6 +1,6 @@
 package controlpane;
 
-import alertexception.AlertException;
+import alertbox.AlertBox;
 import java.io.File;
 import javafx.scene.text.Font;
 import mainpane.MainPaneController;
@@ -18,15 +18,12 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -137,7 +134,8 @@ public class ControlPaneController implements Initializable {
         }
         catch (java.io.IOException ioEx)
         {
-            AlertException.show(
+            AlertBox.show(
+                    javafx.scene.control.Alert.AlertType.ERROR,
                     "Errore nel caricamento del file!",
                     "Errore interno al programma.",
                     "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
@@ -199,11 +197,12 @@ public class ControlPaneController implements Initializable {
             {
                 ev.consume();
                 mainPaneToggleButton.setSelected(true);
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Impossibile proseguire!");
-                alert.setHeaderText("Impossibile nascondere il pannello principale!");
-                alert.setContentText("Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare.");
-                alert.showAndWait();
+                AlertBox.show(
+                    javafx.scene.control.Alert.AlertType.WARNING,
+                    "Impossibile proseguire!",
+                    "Impossibile nascondere il pannello principale!",
+                    "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+                );
             }
         }
     }
@@ -348,7 +347,8 @@ public class ControlPaneController implements Initializable {
             }
             catch (Exception ex)
             {
-                AlertException.show(
+                AlertBox.show(
+                        javafx.scene.control.Alert.AlertType.ERROR,
                         "Errore nel caricamento del file!",
                         "Formato non supportato",
                         "Il formato del media \"" + file.getName() + "\" non supportato!",
@@ -386,11 +386,12 @@ public class ControlPaneController implements Initializable {
         }
         else
         {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Impossibile proseguire!");
-            alert.setHeaderText("Impossibile resettare il pannello principale!");
-            alert.setContentText("Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare.");
-            alert.showAndWait();
+            AlertBox.show(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Impossibile proseguire!",
+                "Impossibile resettare il pannello principale!",
+                "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+            );
         }
     }
     

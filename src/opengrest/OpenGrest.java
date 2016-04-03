@@ -1,6 +1,6 @@
 package opengrest;
 
-import alertexception.AlertException;
+import alertbox.AlertBox;
 import controlpane.ControlPaneController;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,7 +77,8 @@ public class OpenGrest extends Application {
                 }
                 catch (Exception ex)
                 {
-                    AlertException.show(
+                    AlertBox.show(
+                        javafx.scene.control.Alert.AlertType.ERROR,
                         "Errore nella lettura del file!",
                         "Valori inattesi nel file di configurazione.",
                         "Errore nella lettura della configurazione salvata (file settings.conf).\n"
@@ -96,7 +97,8 @@ public class OpenGrest extends Application {
         }
         catch (java.io.IOException ioEx)
         {
-            AlertException.show(
+            AlertBox.show(
+                    javafx.scene.control.Alert.AlertType.ERROR,
                     "Errore nel caricamento del file!",
                     "Errore interno al programma.",
                     "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
@@ -157,7 +159,8 @@ public class OpenGrest extends Application {
         }
         catch (FileNotFoundException ex)
         {
-            AlertException.show(
+            AlertBox.show(
+                javafx.scene.control.Alert.AlertType.ERROR,
                 "Errore nel caricamento del file!",
                 "File non trovato.",
                 "Errore nel caricamento del file di impostazioni settings.conf\n"
@@ -167,7 +170,8 @@ public class OpenGrest extends Application {
         }
         catch (UnsupportedEncodingException ex)
         {
-            AlertException.show(
+            AlertBox.show(
+                javafx.scene.control.Alert.AlertType.ERROR,
                 "Errore nel caricamento del file!",
                 "Errore di codifica.",
                 "Errore nella gestione della codifica del file settings.conf\n"
