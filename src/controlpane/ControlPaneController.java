@@ -1,7 +1,10 @@
 package controlpane;
 
-import alertbox.AlertBox;
+import java.awt.Desktop;
+import util.AlertBox;
+import util.Lyric;
 import java.io.File;
+import java.net.URI;
 import javafx.scene.text.Font;
 import mainpane.MainPaneController;
 import java.net.URL;
@@ -19,20 +22,25 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -42,7 +50,15 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import mediacontrol.MediaControl;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import util.LyricBlock;
+import util.LyricBlock.BlockType;
 
 public class ControlPaneController implements Initializable {
     
@@ -50,7 +66,8 @@ public class ControlPaneController implements Initializable {
     public Stage mainStage;
     private Timeline oneSecTimeline;
     public LocalDateTime targetDateTime;
-    private Media mediaFile;
+    private Media mediaFile = null;
+    private Lyric lyricFile = null;
     
     // Opzioni principali.
     @FXML public TextField titleField;
@@ -60,18 +77,24 @@ public class ControlPaneController implements Initializable {
     @FXML public ComboBox hourCombo;
     @FXML public TextField targetField;
     @FXML public ColorPicker backgroundColorPicker;
+    @FXML public ImageView imgHelp;
     // Controllo testo.
     @FXML public TextArea textArea;
     @FXML public ComboBox fontStyleCombo;
     @FXML public ComboBox fontColorCombo;
     @FXML public ComboBox fontSizeCombo;
     @FXML public Button addTextButton;
+    // Controllo testi canzoni.
+    @FXML private Label lyricsFileNameLabel;
+    @FXML private Button addLyricsFileButton;
+    @FXML public ComboBox fontSizeLyricsCombo;
     // Controllo file media.
     @FXML private CheckBox autoplayCheckbox;
     @FXML private CheckBox loopCheckbox;
     @FXML private Label mediaFileNameLabel;
     @FXML private Button addMediaFileButton;
     // Controllo MainPane.
+    @FXML private Button mainPaneResetButton;
     @FXML private ToggleButton mainPaneToggleButton;
     
     @Override
@@ -85,6 +108,28 @@ public class ControlPaneController implements Initializable {
             Parent root = (Parent) loader.load();
             MainPaneController controller = loader.getController();
             mainController = controller;
+            
+            imgHelp.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+                {
+                    try
+                    {
+                        desktop.browse(URI.create("https://github.com/GioBonvi/OpenGrest#guida"));
+                    }
+                    catch (Exception ex)
+                    {
+                        AlertBox.show(
+                            javafx.scene.control.Alert.AlertType.ERROR,
+                            "Impossibile proseguire!",
+                            "Impossibile aprire la pagina di aiuto.",
+                            "È risultato impossibile aprire la pagina di aiuto: puoi provare ad aprirla manualmente inserendo questo link nel tuo browser:\n\n" +
+                                    "https://github.com/GioBonvi/OpenGrest#guida",
+                            ex
+                        );
+                    }
+                }
+            });
             
             mainStage = new Stage();
             mainStage.setTitle("OpenGrest");
@@ -115,14 +160,6 @@ public class ControlPaneController implements Initializable {
                     );
                 }
             });
-                        
-            // Chiudi tutti i Media prima di nascondere.
-            mainStage.setOnHiding(ev -> {
-                if (! mainController.terminateAll())
-                {
-                    System.out.println("Chiudi i file multimediali a tutto schermo!");
-                }
-            });
             
             mainStage.setOnShowing(ev -> {
                 // Ripristina posizione e dimensioni salvate quando viene riaperto.
@@ -142,10 +179,13 @@ public class ControlPaneController implements Initializable {
                 mainController.isMaximized.bind(mainStage.maximizedProperty());
             });
             
-            // Bind mostra/nascondi MainPane al pulsante nel Pannello di Controllo
+            // Collega mostra/nascondi pannello principale al pulsante nel pannello di controllo.
             mainStage.showingProperty().addListener((obs, old_v, new_v) -> {
                 mainPaneToggleButton.setSelected(new_v);
             });
+            
+            // Permetti di resettare il pannello principale solo mentre è visibile.
+            mainPaneResetButton.disableProperty().bind(mainStage.showingProperty().not());
         }
         catch (java.io.IOException ioEx)
         {
@@ -172,10 +212,12 @@ public class ControlPaneController implements Initializable {
         fontStyleCombo.getSelectionModel().select(0);
         fontColorCombo.getItems().addAll("Nero", "Rosso", "Blu", "Verde");
         fontColorCombo.getSelectionModel().select(0);
-        for (int i = 10; i <= 80; i += 2)
+        for (int i = 20; i <= 80; i += 2)
         {
             fontSizeCombo.getItems().addAll(i);
+            fontSizeLyricsCombo.getItems().addAll(i);
         }
+        fontSizeCombo.getSelectionModel().select(5);
         fontSizeCombo.getSelectionModel().select(5);
         
         // Permetti di aggiungere testo solo se textArea contiene qualcosa.
@@ -279,13 +321,12 @@ public class ControlPaneController implements Initializable {
         int size;
         try
         {
-            size = Integer.parseInt(
-                    fontSizeCombo.getSelectionModel().getSelectedItem().toString()
-            );
+            size = Integer.parseInt(fontSizeCombo.getValue().toString());
         }
         catch (Exception ex)
         {
             size = 20;
+            fontSizeCombo.setValue(20);
         }
         int styleIndex = fontStyleCombo.getSelectionModel().getSelectedIndex();
         FontWeight fontWeight = (styleIndex == 1 || styleIndex == 3 ? FontWeight.BOLD : FontWeight.NORMAL);
@@ -324,6 +365,124 @@ public class ControlPaneController implements Initializable {
         
         // Vai al fondo dello scroll.
         mainController.bodyScroll.setVvalue(1);
+    }
+    
+    // Apri la schermata per scegliere un file con un testo musical.
+    @FXML private void handleChooseLyricsFileButton()
+    {
+        FileChooser fc = new FileChooser();
+        Stage fcStage = new Stage();
+        fcStage.setTitle("Scegli un testo musicale");
+        // Apri la cartella ./Testi se esiste.
+        if (Files.exists(Paths.get("./Testi")))
+        {
+            fc.setInitialDirectory(
+                new File("./Testi")
+            );
+        }
+        // Imposta i filtri per file *.txt.
+        fc.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("File di testo", "*.txt")
+        );
+        File file = fc.showOpenDialog(fcStage);
+        // carica in lyricFile il nuovo testo.
+        if (file != null)
+        {
+            try
+            {
+                // XML parsing.
+                DocumentBuilderFactory dbFactory =
+                        DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(file);
+                doc.getDocumentElement().normalize();
+                Element root = doc.getDocumentElement();
+                // Imposta il titolo.
+                lyricFile = new Lyric(root.getAttribute("titolo"));
+                NodeList children = root.getChildNodes();
+                // Imposta strofe e ritornelli.
+                for (int i = 0; i < children.getLength(); i++)
+                {
+                    Node node = children.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        Element elem = (Element) node;
+                        String text = elem.getTextContent();
+                        BlockType type = (
+                                elem.getAttribute("tipo").equals("strofa")
+                                ? BlockType.STROFA
+                                : BlockType.RIT
+                        );
+                        lyricFile.blocks.add(new LyricBlock(text, type));
+                    }
+                }
+                lyricsFileNameLabel.setText(file.getName());
+                addLyricsFileButton.setDisable(false);
+            }
+            catch (Exception ex)
+            {
+                AlertBox.show(
+                        Alert.AlertType.ERROR,
+                        "Errore nella lettura del file.",
+                        "È avvenuto un errore nella lettura del file " + file.getName(),
+                        "L'erore non è stato previsto...",
+                        ex
+                );
+                // Reset se errore.
+                lyricFile = null;
+                addLyricsFileButton.setDisable(true);
+                lyricsFileNameLabel.setText("Nessun file selezionato");
+            }
+        }
+    }
+    
+    @FXML private void handleAddLyricsFileButton()
+    {
+        if (lyricFile != null)
+        {
+            // Dimensione base del testo della canzone (il titolo sare baseSize * 1.5).
+            int baseSize;
+            try 
+            {
+                baseSize = Integer.parseInt(fontSizeLyricsCombo.getValue().toString());
+            }
+            catch (Exception ex)
+            {
+                baseSize = 30;
+                fontSizeLyricsCombo.setValue("30");
+            }
+            // Qui viene inserita la canzone.
+            TextFlow newTF = new TextFlow();
+            // Titotlo: grasssetto, 1.5 * baseSize.
+            Text title = new Text(lyricFile.getTitle());
+            title.setFont(Font.font("System", FontWeight.BOLD, (int) (baseSize * 1.5)));
+            newTF.getChildren().add(title);
+            // Strofe e ritornelli.
+            for (LyricBlock block: lyricFile.blocks)
+            {
+                // Strofa.
+                Text blockText = new Text("\n" + block.getText());
+                blockText.setFont(Font.font("System", baseSize));
+                // Ritornello.
+                if (block.getType() == BlockType.RIT)
+                {
+                    blockText.setFont(Font.font("System", FontPosture.ITALIC, baseSize));
+                    blockText.setText("\n\n" + block.getText() + "\n");
+                }
+                newTF.getChildren().addAll(new Text(" "), blockText, new Text(" "));
+            }
+            // inserisci il testo in una ScrollPane leggermente più piccola dello spazio disponibile.
+            ScrollPane scrPane = new ScrollPane(newTF);
+            scrPane.setMinHeight(mainController.bodyScroll.getHeight() * 85 / 100);
+            scrPane.setMaxHeight(mainController.bodyScroll.getHeight() * 85 / 100);
+            scrPane.setMinWidth(mainController.bodyScroll.getWidth() * 85 / 100);
+            scrPane.setMaxWidth(mainController.bodyScroll.getWidth() * 85 / 100);
+            mainController.body.getChildren().add(scrPane);
+            // Reset controllo.
+            lyricsFileNameLabel.setText("Nessun file selezionato");
+            lyricFile = null;
+        }
+        addLyricsFileButton.setDisable(true);
     }
     
     // Apri la schermata per scegliere un file multimediale.

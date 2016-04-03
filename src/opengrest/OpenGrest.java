@@ -1,6 +1,6 @@
 package opengrest;
 
-import alertbox.AlertBox;
+import util.AlertBox;
 import controlpane.ControlPaneController;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,6 +74,7 @@ public class OpenGrest extends Application {
                     controller.fontStyleCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
                     controller.fontColorCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
                     controller.fontSizeCombo.setValue(Integer.parseInt(lines.get(i++)));
+                    controller.fontSizeLyricsCombo.setValue(lines.get(i++));
                 }
                 catch (Exception ex)
                 {
@@ -132,16 +133,16 @@ public class OpenGrest extends Application {
         try (PrintWriter writer = new PrintWriter("settings.conf", "UTF-8"))
         {
             // Salva le dimensioni di MainPane.
-            
             writer.println(controller.mainController.lastX.doubleValue());
             writer.println(controller.mainController.lastY.doubleValue());
             writer.println(controller.mainController.lastW.doubleValue());
             writer.println(controller.mainController.lastH.doubleValue());
             writer.println(controller.mainController.isMaximized.get());
             // Salva il contenuto di ControlPane.
+            // Titolo e sottotitolo
             writer.println(controller.titleField.getText());
             writer.println(controller.subtitleField.getText());
-            
+            // Data e ora countdown
             LocalDate ld = controller.datePicker.getValue();
             if (ld == null)
             {
@@ -158,7 +159,7 @@ public class OpenGrest extends Application {
             writer.println(controller.hourCombo.getValue());
             writer.println(controller.minuteCombo.getValue());
             writer.println(controller.targetField.getText());
-            
+            // Colore di sfondo.
             Color clr = (controller.backgroundColorPicker.getValue() != null
                     ? controller.backgroundColorPicker.getValue()
                     : Color.WHITE
@@ -166,11 +167,13 @@ public class OpenGrest extends Application {
             writer.println((int) (clr.getRed() * 255));
             writer.println((int) (clr.getGreen() * 255));
             writer.println((int) (clr.getBlue() * 255));
-            
+            // Controllo testo.
             writer.println(controller.textArea.getText());
             writer.println(controller.fontStyleCombo.getSelectionModel().getSelectedIndex());
             writer.println(controller.fontColorCombo.getSelectionModel().getSelectedIndex());
             writer.println(controller.fontSizeCombo.getValue());
+            // Controllo testi canzoni.
+            writer.println(controller.fontSizeLyricsCombo.getValue());
             writer.close();
         }
         catch (FileNotFoundException ex)

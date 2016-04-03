@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -8,17 +9,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane prefHeight="531.0" prefWidth="797.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpane.ControlPaneController">
+<ScrollPane prefHeight="600.0" prefWidth="797.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpane.ControlPaneController">
    <content>
       <GridPane hgap="20.0" prefHeight="452.0" prefWidth="770.0" vgap="10.0">
           <children> 
             <Button fx:id="applyButton" onAction="#handleApply" text="Applica" GridPane.rowIndex="5" />
-            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="50.0" GridPane.rowIndex="12" />
+            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="50.0" GridPane.rowIndex="14" />
             <Label text="Titolo" GridPane.rowIndex="1" />
             <TextField fx:id="titleField" promptText="Titolo" GridPane.rowIndex="2" />
             <Label text="Sottotitolo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="subtitleField" promptText="Sottotitolo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <ToggleButton fx:id="mainPaneToggleButton" mnemonicParsing="false" onAction="#handleMainPanelToggleButton" text="Principale" GridPane.columnIndex="4" GridPane.rowIndex="11" />
+            <ToggleButton fx:id="mainPaneToggleButton" mnemonicParsing="false" onAction="#handleMainPanelToggleButton" text="Principale" GridPane.columnIndex="4" GridPane.rowIndex="13" />
             <Label text="Data countdown" GridPane.rowIndex="3" />
             <DatePicker fx:id="datePicker" GridPane.rowIndex="4" />
             <Label text="Ora countdown" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -40,7 +41,7 @@
             <Label text="Obiettivo countdown" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <TextField fx:id="targetField" promptText="es: &quot;Inizio del Grest&quot;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Button fx:id="addTextButton" mnemonicParsing="false" onAction="#handleAddText" text="Aggiungi" GridPane.rowIndex="8" />
-            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#handleResetButton" text="Reset" GridPane.rowIndex="11" />
+            <Button fx:id="mainPaneResetButton" mnemonicParsing="false" onAction="#handleResetButton" text="Reset" GridPane.rowIndex="13" />
             <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                <children>
                   <Label text="Stile" GridPane.columnIndex="2" GridPane.rowIndex="5" />
@@ -52,17 +53,17 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Opzioni">
+            <Label prefHeight="27.0" prefWidth="143.0" text="Opzioni principali">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Audio/video" GridPane.rowIndex="9">
+            <Label text="Audio/video" GridPane.rowIndex="11">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <CheckBox fx:id="autoplayCheckbox" mnemonicParsing="false" text="Autoplay" GridPane.rowIndex="10" />
+            <CheckBox fx:id="autoplayCheckbox" mnemonicParsing="false" text="Autoplay" GridPane.rowIndex="12" />
             <TextArea fx:id="textArea" prefHeight="26.0" prefWidth="117.0" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="7" />
             <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="7">
                <children>
@@ -76,16 +77,35 @@
                   <ComboBox fx:id="fontSizeCombo" editable="true" prefWidth="150.0" />
                </children>
             </VBox>
-            <CheckBox fx:id="loopCheckbox" mnemonicParsing="false" text="Loop" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <Label fx:id="mediaFileNameLabel" text="Nessun file selezionato" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-            <Button fx:id="chooseMediaFileButton" mnemonicParsing="false" onAction="#handleChooseMediaFileButton" text="Sfoglia" GridPane.columnIndex="3" GridPane.rowIndex="10" />
-            <Button fx:id="addMediaFileButton" disable="true" mnemonicParsing="false" onAction="#handleAddMediaFileButton" text="Aggiungi" GridPane.columnIndex="4" GridPane.rowIndex="10" />
+            <CheckBox fx:id="loopCheckbox" mnemonicParsing="false" text="Loop" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <Label fx:id="mediaFileNameLabel" text="Nessun file selezionato" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+            <Button fx:id="chooseMediaFileButton" mnemonicParsing="false" onAction="#handleChooseMediaFileButton" text="Sfoglia" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+            <Button fx:id="addMediaFileButton" disable="true" mnemonicParsing="false" onAction="#handleAddMediaFileButton" text="Aggiungi" GridPane.columnIndex="4" GridPane.rowIndex="12" />
             <ColorPicker fx:id="backgroundColorPicker" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label text="Colore di sfondo" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Testi canzoni" GridPane.rowIndex="9">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lyricsFileNameLabel" text="Nessun file selezionato" GridPane.rowIndex="10" />
+            <Button fx:id="chooseLyricsFileButton" mnemonicParsing="false" onAction="#handleChooseLyricsFileButton" text="Sfoglia" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <Button fx:id="addLyricsFileButton" disable="true" mnemonicParsing="false" onAction="#handleAddLyricsFileButton" text="Aggiungi" GridPane.columnIndex="4" GridPane.rowIndex="10" />
+            <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10">
+               <children>
+                  <Label text="Dimensione" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                  <ComboBox fx:id="fontSizeLyricsCombo" editable="true" prefHeight="25.0" prefWidth="135.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+               </children>
+            </HBox>
+            <ImageView fx:id="imgHelp" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="2">
+               <image>
+                  <Image url="/util/Help.png" />
+               </image>
+            </ImageView>
          </children>
          <columnConstraints>
-            <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />
-            <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />
+            <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="155.0" />
+            <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="113.0" />
             <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />
             <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />
             <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="150.0" />
@@ -99,6 +119,8 @@
             <RowConstraints minHeight="25.0" />
             <RowConstraints minHeight="25.0" />
             <RowConstraints minHeight="100.0" />
+            <RowConstraints minHeight="25.0" prefHeight="30.0" />
+            <RowConstraints minHeight="25.0" prefHeight="30.0" />
             <RowConstraints minHeight="25.0" />
             <RowConstraints minHeight="25.0" />
             <RowConstraints minHeight="25.0" />
