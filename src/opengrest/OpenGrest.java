@@ -93,7 +93,23 @@ public class OpenGrest extends Application {
             stage.setScene(new Scene(root));
             stage.show();
 
-            stage.setOnCloseRequest((e) -> handleClose());
+            stage.setOnCloseRequest((e) -> {
+                if (controller.mainController.terminateAll())
+                {
+                    handleClose();
+                }
+                else
+                {
+                    e.consume();
+                    AlertBox.show(
+                        javafx.scene.control.Alert.AlertType.WARNING,
+                        "Impossibile proseguire!",
+                        "Impossibile chiudere il programma.",
+                        "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+                    );
+                }
+                
+            });
         }
         catch (java.io.IOException ioEx)
         {

@@ -32,7 +32,6 @@ public class MainPaneController implements Initializable
     
     public boolean terminateAll()
     {
-    
         boolean canIClose = true;
         
         for(Node node: body.getChildren())

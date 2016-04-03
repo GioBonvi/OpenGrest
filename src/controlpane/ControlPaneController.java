@@ -98,7 +98,19 @@ public class ControlPaneController implements Initializable {
             // Nascondi la finestra invece di chiuderla.
             mainStage.setOnCloseRequest(ev -> {
                 ev.consume();
-                mainStage.hide();
+                if (mainController.terminateAll())
+                {
+                    mainStage.hide();
+                }
+                else
+                {
+                    AlertBox.show(
+                        javafx.scene.control.Alert.AlertType.WARNING,
+                        "Impossibile proseguire!",
+                        "Impossibile nascondere il pannello principale.",
+                        "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+                    );
+                }
             });
                         
             // Chiudi tutti i Media prima di nascondere.
