@@ -33,7 +33,7 @@
    <center>
       <ScrollPane fx:id="bodyScroll" prefViewportHeight="280.0" prefViewportWidth="580.0">
          <content>
-            <VBox fx:id="body" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" style="-fx-background-color: rgba(0,0,0,0);" BorderPane.alignment="CENTER">
+            <VBox fx:id="body" maxHeight="1.7976931348623157E308" prefHeight="200.0" style="-fx-background-color: rgba(0,0,0,0);" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </BorderPane.margin>

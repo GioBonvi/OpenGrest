@@ -38,6 +38,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import mediacontrol.MediaControl;
@@ -90,6 +92,7 @@ public class ControlPaneController implements Initializable {
             
             // Espandi orizzontalmente per tutto lo spazio possibile.
             mainController.body.minWidthProperty().bind(mainController.bodyScroll.widthProperty().subtract(20));
+            mainController.body.maxWidthProperty().bind(mainController.bodyScroll.widthProperty().subtract(20));
             // Scorri in fondo ogni volta che vengono aggiunti elementi.
             mainController.body.heightProperty().addListener( (ov, t, t1) -> {
                  mainController.bodyScroll.setVvalue(1); 
@@ -311,11 +314,12 @@ public class ControlPaneController implements Initializable {
         }
         
         // Aggiungi una nuova Label al MainPane con questo testo, font e colore.
-        Label newLbl = new Label();
-        newLbl.setText(textArea.getText());
-        newLbl.setFont(newFont);
-        newLbl.setTextFill(fontColor);
-        mainController.body.getChildren().add(newLbl);
+        Text text = new Text();
+        text.setText(textArea.getText());
+        text.setFont(newFont);
+        text.setFill(fontColor);
+        TextFlow newTF = new TextFlow(text);
+        mainController.body.getChildren().add(newTF);
         textArea.setText("");
         
         // Vai al fondo dello scroll.
