@@ -26,7 +26,7 @@ Quest'ultimo permette di aggiungere, modificare o rimuovere contenuto dal pannel
 
 ## Guida
 
-Il pannello va posizionato sullo schermo esteso (consiglio di massimizzarlo su tutto lo schermo), mentre il pannello di controllo deve rimanere sullo schermo principale, visibile solo all'utente che opera il computer.
+Il pannello principale va posizionato sullo schermo esteso (consiglio di massimizzarlo su tutto lo schermo), mentre il pannello di controllo deve rimanere sullo schermo principale, visibile solo all'utente che opera il computer.
 
 L'utente al computer potrà usare i vari controlli (disposti per sezioni) per far comparire del contenuto sul pannello principale.
 
