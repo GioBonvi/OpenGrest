@@ -45,8 +45,8 @@ public class OpenGrest extends Application {
                     controller.mainController.lastH.set(Float.parseFloat(lines.get(i++)));
                     controller.mainController.isMaximized.set(Boolean.valueOf(lines.get(i++)));
                     controller.titleField.setText(lines.get(i++));
-                    controller.subtitleField.setText(lines.get(i));
-                    i+=3;
+                    controller.subtitleField.setText(lines.get(i++));
+                    i+=2;
                     if (! lines.get(i++).equals("0"))
                     {
                         LocalDate ldt = LocalDate.of(
@@ -72,7 +72,11 @@ public class OpenGrest extends Application {
                     ));
                     controller.textArea.setText(lines.get(i++));
                     controller.fontStyleCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
-                    controller.fontColorCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
+                    controller.fontColorPicker.setValue(Color.rgb(
+                            Integer.parseInt(lines.get(i++)),
+                            Integer.parseInt(lines.get(i++)),
+                            Integer.parseInt(lines.get(i++))
+                    ));
                     controller.fontSizeCombo.setValue(String.valueOf(Integer.parseInt(lines.get(i++))));
                     controller.fontSizeLyricsCombo.setValue(lines.get(i++));
                 }
@@ -170,7 +174,13 @@ public class OpenGrest extends Application {
             // Controllo testo.
             writer.println(controller.textArea.getText());
             writer.println(controller.fontStyleCombo.getSelectionModel().getSelectedIndex());
-            writer.println(controller.fontColorCombo.getSelectionModel().getSelectedIndex());
+            clr = (controller.fontColorPicker.getValue() != null
+                    ? controller.fontColorPicker.getValue()
+                    : Color.WHITE
+            );
+            writer.println((int) (clr.getRed() * 255));
+            writer.println((int) (clr.getGreen() * 255));
+            writer.println((int) (clr.getBlue() * 255));
             writer.println(controller.fontSizeCombo.getValue());
             // Controllo testi canzoni.
             writer.println(controller.fontSizeLyricsCombo.getValue());

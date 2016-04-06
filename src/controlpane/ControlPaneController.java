@@ -80,7 +80,7 @@ public class ControlPaneController implements Initializable {
     // Controllo testo.
     @FXML public TextArea textArea;
     @FXML public ComboBox<String> fontStyleCombo;
-    @FXML public ComboBox<String> fontColorCombo;
+    @FXML public ColorPicker fontColorPicker;
     @FXML public ComboBox<String> fontSizeCombo;
     @FXML public Button addTextButton;
     // Controllo testi canzoni.
@@ -209,8 +209,6 @@ public class ControlPaneController implements Initializable {
         }
         fontStyleCombo.getItems().addAll("Nessuno", "Grassetto", "Corsivo", "Grassetto corsivo");
         fontStyleCombo.getSelectionModel().select(0);
-        fontColorCombo.getItems().addAll("Nero", "Rosso", "Blu", "Verde");
-        fontColorCombo.getSelectionModel().select(0);
         for (int i = 20; i <= 80; i += 2)
         {
             fontSizeCombo.getItems().addAll(String.valueOf(i));
@@ -331,33 +329,12 @@ public class ControlPaneController implements Initializable {
         FontWeight fontWeight = (styleIndex == 1 || styleIndex == 3 ? FontWeight.BOLD : FontWeight.NORMAL);
         FontPosture fontStyle = (styleIndex == 2 || styleIndex == 3 ? FontPosture.ITALIC : FontPosture.REGULAR);
         Font newFont = Font.font("System", fontWeight, fontStyle, size);
-        
-        // Imposta il colore.
-        Paint fontColor;
-        switch (fontColorCombo.getSelectionModel().getSelectedIndex())
-        {
-            case 0:
-                fontColor = Color.BLACK;
-                break;
-            case 1:
-                fontColor = Color.RED;
-                break;
-            case 2:
-                fontColor = Color.BLUE;
-                break;
-            case 3:
-                fontColor = Color.GREEN;
-                break;
-            default:
-                fontColor = Color.BLACK;
-                break;
-        }
-        
+                
         // Aggiungi una nuova Label al MainPane con questo testo, font e colore.
         Text text = new Text();
         text.setText(textArea.getText());
         text.setFont(newFont);
-        text.setFill(fontColor);
+        text.setFill(fontColorPicker.getValue());
         TextFlow newTF = new TextFlow(text);
         mainController.body.getChildren().add(newTF);
         textArea.setText("");

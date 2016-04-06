@@ -68,7 +68,7 @@
             <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="7">
                <children>
                   <Label text="Colore" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <ComboBox fx:id="fontColorCombo" prefWidth="150.0" />
+                  <ColorPicker fx:id="fontColorPicker" />
                </children>
             </VBox>
             <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="7">
