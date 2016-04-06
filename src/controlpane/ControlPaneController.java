@@ -22,7 +22,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -73,21 +72,21 @@ public class ControlPaneController implements Initializable {
     @FXML public TextField titleField;
     @FXML public TextField subtitleField;
     @FXML public DatePicker datePicker;
-    @FXML public ComboBox minuteCombo;
-    @FXML public ComboBox hourCombo;
+    @FXML public ComboBox<String> minuteCombo;
+    @FXML public ComboBox<String> hourCombo;
     @FXML public TextField targetField;
     @FXML public ColorPicker backgroundColorPicker;
     @FXML public ImageView imgHelp;
     // Controllo testo.
     @FXML public TextArea textArea;
-    @FXML public ComboBox fontStyleCombo;
-    @FXML public ComboBox fontColorCombo;
-    @FXML public ComboBox fontSizeCombo;
+    @FXML public ComboBox<String> fontStyleCombo;
+    @FXML public ComboBox<String> fontColorCombo;
+    @FXML public ComboBox<String> fontSizeCombo;
     @FXML public Button addTextButton;
     // Controllo testi canzoni.
     @FXML private Label lyricsFileNameLabel;
     @FXML private Button addLyricsFileButton;
-    @FXML public ComboBox fontSizeLyricsCombo;
+    @FXML public ComboBox<String> fontSizeLyricsCombo;
     // Controllo file media.
     @FXML private CheckBox autoplayCheckbox;
     @FXML private CheckBox loopCheckbox;
@@ -214,8 +213,8 @@ public class ControlPaneController implements Initializable {
         fontColorCombo.getSelectionModel().select(0);
         for (int i = 20; i <= 80; i += 2)
         {
-            fontSizeCombo.getItems().addAll(i);
-            fontSizeLyricsCombo.getItems().addAll(i);
+            fontSizeCombo.getItems().addAll(String.valueOf(i));
+            fontSizeLyricsCombo.getItems().addAll(String.valueOf(i));
         }
         fontSizeCombo.getSelectionModel().select(5);
         fontSizeCombo.getSelectionModel().select(5);
@@ -278,7 +277,7 @@ public class ControlPaneController implements Initializable {
         int min, hour;
         try
         {
-            min = Integer.parseInt(minuteCombo.getValue().toString());
+            min = Integer.parseInt(minuteCombo.getValue());
         }
         catch (Exception e)
         {
@@ -286,7 +285,7 @@ public class ControlPaneController implements Initializable {
         }
         try
         {
-            hour = Integer.parseInt(hourCombo.getValue().toString());
+            hour = Integer.parseInt(hourCombo.getValue());
         }
         catch (Exception e)
         {
@@ -321,12 +320,12 @@ public class ControlPaneController implements Initializable {
         int size;
         try
         {
-            size = Integer.parseInt(fontSizeCombo.getValue().toString());
+            size = Integer.parseInt(fontSizeCombo.getValue());
         }
         catch (Exception ex)
         {
             size = 20;
-            fontSizeCombo.setValue(20);
+            fontSizeCombo.setValue(String.valueOf(20));
         }
         int styleIndex = fontStyleCombo.getSelectionModel().getSelectedIndex();
         FontWeight fontWeight = (styleIndex == 1 || styleIndex == 3 ? FontWeight.BOLD : FontWeight.NORMAL);
@@ -444,7 +443,7 @@ public class ControlPaneController implements Initializable {
             int baseSize;
             try 
             {
-                baseSize = Integer.parseInt(fontSizeLyricsCombo.getValue().toString());
+                baseSize = Integer.parseInt(fontSizeLyricsCombo.getValue());
             }
             catch (Exception ex)
             {

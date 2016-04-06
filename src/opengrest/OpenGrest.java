@@ -73,7 +73,7 @@ public class OpenGrest extends Application {
                     controller.textArea.setText(lines.get(i++));
                     controller.fontStyleCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
                     controller.fontColorCombo.getSelectionModel().select(Integer.parseInt(lines.get(i++)));
-                    controller.fontSizeCombo.setValue(Integer.parseInt(lines.get(i++)));
+                    controller.fontSizeCombo.setValue(String.valueOf(Integer.parseInt(lines.get(i++))));
                     controller.fontSizeLyricsCombo.setValue(lines.get(i++));
                 }
                 catch (Exception ex)
