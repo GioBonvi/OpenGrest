@@ -1,4 +1,4 @@
-package controlpane;
+package controlpanel;
 
 import java.awt.Desktop;
 import util.AlertBox;
@@ -6,7 +6,7 @@ import util.Lyric;
 import java.io.File;
 import java.net.URI;
 import javafx.scene.text.Font;
-import mainpane.MainPaneController;
+import mainpanel.MainPanelController;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,11 +42,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
@@ -59,9 +60,9 @@ import org.w3c.dom.NodeList;
 import util.LyricBlock;
 import util.LyricBlock.BlockType;
 
-public class ControlPaneController implements Initializable {
+public class ControlPanelController implements Initializable {
     
-    public MainPaneController mainController;
+    public MainPanelController mainController;
     public Stage mainStage;
     private Timeline oneSecTimeline;
     public LocalDateTime targetDateTime;
@@ -92,9 +93,11 @@ public class ControlPaneController implements Initializable {
     @FXML private CheckBox loopCheckbox;
     @FXML private Label mediaFileNameLabel;
     @FXML private Button addMediaFileButton;
-    // Controllo MainPane.
-    @FXML private Button mainPaneResetButton;
-    @FXML private ToggleButton mainPaneToggleButton;
+    // Controllo animazioni.
+    @FXML public TextField animationTextField;
+    // Controllo pannello principale.
+    @FXML private Button mainPanelResetButton;
+    @FXML private ToggleButton mainPanelToggleButton;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -102,12 +105,16 @@ public class ControlPaneController implements Initializable {
         try
         {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/mainpane/MainPane.fxml")
+                getClass().getResource("/mainpanel/MainPanel.fxml")
             );
             Parent root = (Parent) loader.load();
-            MainPaneController controller = loader.getController();
-            mainController = controller;
+            // mainController permette di gestire tutti i contenuti del pannello principale
+            mainController = loader.getController();
             
+            /*
+             * Cliccando sull'immagine del punto interrogativo sul pannello di
+             * controllo si apre la guida online (il file README.md di GitHub).
+             */
             imgHelp.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                 if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
@@ -122,7 +129,9 @@ public class ControlPaneController implements Initializable {
                             javafx.scene.control.Alert.AlertType.ERROR,
                             "Impossibile proseguire!",
                             "Impossibile aprire la pagina di aiuto.",
-                            "È risultato impossibile aprire la pagina di aiuto: puoi provare ad aprirla manualmente inserendo questo link nel tuo browser:\n\n" +
+                            "Non è stato possibile aprire la pagina di aiuto:"
+                                    + " puoi provare ad aprirla manualmente "
+                                    + "inserendo questo link nel tuo browser:\n\n" +
                                     "https://github.com/GioBonvi/OpenGrest#guida",
                             ex
                         );
@@ -130,19 +139,32 @@ public class ControlPaneController implements Initializable {
                 }
             });
             
+            /*
+             * mainStage è la finestra del pannello principale, necessaria per gestire gli
+             * eventi come caricamento, chiusura etc.
+             */
             mainStage = new Stage();
             mainStage.setTitle("OpenGrest");
             mainStage.setScene(new Scene(root));
             
-            // Espandi orizzontalmente per tutto lo spazio possibile.
-            mainController.body.minWidthProperty().bind(mainController.bodyScroll.widthProperty().subtract(20));
-            mainController.body.maxWidthProperty().bind(mainController.bodyScroll.widthProperty().subtract(20));
-            // Scorri in fondo ogni volta che vengono aggiunti elementi.
+            /*
+             * Il pannello principale contiene un pannello di scorrimento all'interno del
+             * quale vengono aggiunti i contenuti.
+             *
+             * Espandi orizzontalmente per tutto lo spazio possibile.
+             */
+            mainController.body.minWidthProperty().bind(
+                    mainController.bodyScroll.widthProperty().subtract(20)
+            );
+            mainController.body.maxWidthProperty().bind(
+                    mainController.bodyScroll.widthProperty().subtract(20)
+            );
+            // Scorri fino in fondo ogni volta che vengono aggiunti elementi.
             mainController.body.heightProperty().addListener( (ov, t, t1) -> {
                  mainController.bodyScroll.setVvalue(1); 
             }) ;
             
-            // Nascondi la finestra invece di chiuderla.
+            // Nascondi la finestra del pannello principale invece di chiuderla.
             mainStage.setOnCloseRequest(ev -> {
                 ev.consume();
                 if (mainController.terminateAll())
@@ -170,7 +192,7 @@ public class ControlPaneController implements Initializable {
                     mainStage.setHeight(mainController.lastH.doubleValue());
                     mainStage.setMaximized(mainController.isMaximized.get());
                 }
-                // Salva costantemente dimensioni e posizione del MainPane.
+                // Salva costantemente dimensioni e posizione del pannello principale.
                 mainController.lastX.bind( mainStage.xProperty());
                 mainController.lastY.bind( mainStage.yProperty());
                 mainController.lastW.bind( mainStage.widthProperty());
@@ -180,11 +202,11 @@ public class ControlPaneController implements Initializable {
             
             // Collega mostra/nascondi pannello principale al pulsante nel pannello di controllo.
             mainStage.showingProperty().addListener((obs, old_v, new_v) -> {
-                mainPaneToggleButton.setSelected(new_v);
+                mainPanelToggleButton.setSelected(new_v);
             });
             
             // Permetti di resettare il pannello principale solo mentre è visibile.
-            mainPaneResetButton.disableProperty().bind(mainStage.showingProperty().not());
+            mainPanelResetButton.disableProperty().bind(mainStage.showingProperty().not());
         }
         catch (java.io.IOException ioEx)
         {
@@ -192,7 +214,7 @@ public class ControlPaneController implements Initializable {
                     javafx.scene.control.Alert.AlertType.ERROR,
                     "Errore nel caricamento del file!",
                     "Errore interno al programma.",
-                    "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
+                    "Errore nel caricamenteo del file /mainpanel/MainPanel.fxml",
                     ioEx
             );
         }
@@ -217,10 +239,13 @@ public class ControlPaneController implements Initializable {
         fontSizeCombo.getSelectionModel().select(5);
         fontSizeCombo.getSelectionModel().select(5);
         
-        // Permetti di aggiungere testo solo se textArea contiene qualcosa.
+        // Impedisci di aggiungere testo al pannello principale se textArea è vuota.
         addTextButton.disableProperty().bind(textArea.textProperty().isEqualTo(""));
         
-        // Fornisce un modo per lanciare un evento al secondo.
+        /*
+         * oneSecTimeline fornisce un modo per lanciare un evento al secondo.
+         * È usato per aggiornare il countdown.
+         */
         oneSecTimeline = new Timeline(
             new KeyFrame(
                 javafx.util.Duration.seconds(0),
@@ -234,10 +259,10 @@ public class ControlPaneController implements Initializable {
         oneSecTimeline.play();
     }
     
-    // Mostra o nascondi il MainPane con l'apposito pulsante nel ControlPane.
+    // Mostra o nascondi il pannello principale con l'apposito pulsante nel pannello di controllo.
     @FXML void handleMainPanelToggleButton(ActionEvent ev)
     {
-        if (mainPaneToggleButton.isSelected())
+        if (mainPanelToggleButton.isSelected())
         {
             mainStage.show();
         }
@@ -250,7 +275,7 @@ public class ControlPaneController implements Initializable {
             else
             {
                 ev.consume();
-                mainPaneToggleButton.setSelected(true);
+                mainPanelToggleButton.setSelected(true);
                 AlertBox.show(
                     javafx.scene.control.Alert.AlertType.WARNING,
                     "Impossibile proseguire!",
@@ -261,7 +286,7 @@ public class ControlPaneController implements Initializable {
         }
     }
     
-    // Modifica titolo, sottotitolo e footer del MainPane.
+    // Modifica titolo, sottotitolo e footer del pannello principale.
     @FXML private void handleApply()
     {
         // Titolo
@@ -304,17 +329,17 @@ public class ControlPaneController implements Initializable {
                     + (int) (newColor.getGreen() * 255) + ","
                     + (int) (newColor.getBlue() * 255) + ")";
             
-            mainController.rootPane.setStyle(newStyle);
-            mainController.rootPane.getChildren().forEach(child -> {
+            mainController.rootPanel.setStyle(newStyle);
+            mainController.rootPanel.getChildren().forEach(child -> {
                 child.setStyle(newStyle);
             });
         }
     }
     
-    // Aggiungi del testo formattato al MainPane.
+    // Aggiungi del testo formattato al pannello principale.
     @FXML private void handleAddText()
     {
-        // Imposta il font dalle ComboBox nel ControlPane.
+        // Imposta il font dalle ComboBox nel pannello di controllo.
         int size;
         try
         {
@@ -330,7 +355,7 @@ public class ControlPaneController implements Initializable {
         FontPosture fontStyle = (styleIndex == 2 || styleIndex == 3 ? FontPosture.ITALIC : FontPosture.REGULAR);
         Font newFont = Font.font("System", fontWeight, fontStyle, size);
                 
-        // Aggiungi una nuova Label al MainPane con questo testo, font e colore.
+        // Aggiungi una nuova Label al pannello di controllo con questo testo, font e colore.
         Text text = new Text();
         text.setText(textArea.getText());
         text.setFont(newFont);
@@ -343,7 +368,7 @@ public class ControlPaneController implements Initializable {
         mainController.bodyScroll.setVvalue(1);
     }
     
-    // Apri la schermata per scegliere un file con un testo musical.
+    // Apri la schermata per scegliere un file con un testo musicale.
     @FXML private void handleChooseLyricsFileButton()
     {
         FileChooser fc = new FileChooser();
@@ -356,12 +381,12 @@ public class ControlPaneController implements Initializable {
                 new File("./Testi")
             );
         }
-        // Imposta i filtri per file *.txt.
+        // Imposta il filtro per file *.txt.
         fc.getExtensionFilters().add(
             new FileChooser.ExtensionFilter("File di testo", "*.txt")
         );
         File file = fc.showOpenDialog(fcStage);
-        // carica in lyricFile il nuovo testo.
+        // Carica in lyricFile il nuovo testo.
         if (file != null)
         {
             try
@@ -404,7 +429,7 @@ public class ControlPaneController implements Initializable {
                         "L'erore non è stato previsto...",
                         ex
                 );
-                // Reset se errore.
+                // Reset se è avvenuto un errore.
                 lyricFile = null;
                 addLyricsFileButton.setDisable(true);
                 lyricsFileNameLabel.setText("Nessun file selezionato");
@@ -412,11 +437,16 @@ public class ControlPaneController implements Initializable {
         }
     }
     
+    /*
+     * Carica un nuovo testo musicale nel pannello principale.
+     * Viene inserito un pannello a scorrimento all'interno del pannello principale.
+     * Il testo viene formatttato secondo titolo, strofa o ritornello.
+     */
     @FXML private void handleAddLyricsFileButton()
     {
         if (lyricFile != null)
         {
-            // Dimensione base del testo della canzone (il titolo sare baseSize * 1.5).
+            // Dimensione base del testo della canzone (il titolo sarà baseSize * 1.5).
             int baseSize;
             try 
             {
@@ -511,6 +541,7 @@ public class ControlPaneController implements Initializable {
         }
     }
     
+    // Aggiungi un file multimediale al pannello principale.
     @FXML private void handleAddMediaFileButton()
     {
         if (mediaFile != null)
@@ -529,6 +560,83 @@ public class ControlPaneController implements Initializable {
         addMediaFileButton.setDisable(true);
     }
     
+    // Mostra una semplice animazione con un testo e della neve che cade.
+    @FXML private void handleSnowButton()
+    {
+        // Elimina tutti i contenuti per mostrare l'animazione.
+        if (mainController.terminateAll())
+        {
+            mainController.body.getChildren().clear();
+        }
+        else
+        {
+            AlertBox.show(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Impossibile proseguire!",
+                "Impossibile resettare il pannello principale!",
+                "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+            );
+            return;
+        }
+        
+        // Testo personalizzato.
+        String text = animationTextField.getText();
+        
+        WebView wv = new WebView();
+        wv.minHeightProperty().bind(mainController.bodyScroll.heightProperty());
+        wv.minWidthProperty().bind(mainController.body.widthProperty());
+        WebEngine we = wv.getEngine();
+        we.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+            if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+                // Setup animazione.
+                we.executeScript("document.getElementById(\"text\").innerHTML = \"" + text + "\"");
+                we.executeScript("snowStorm.flakesMaxActive = 128");
+            }
+        });
+        we.load(getClass().getResource("/util/snow/index.html").toString());
+        
+        mainController.body.getChildren().add(wv);
+        wv.requestFocus();        
+    }
+    
+    // Mostra un testo animato interattivo.
+    @FXML private void handleLogoButton()
+    {
+        // Elimina tutti i contenuti per mostrare l'animazione.
+        if (mainController.terminateAll())
+        {
+            mainController.body.getChildren().clear();
+        }
+        else
+        {
+            AlertBox.show(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Impossibile proseguire!",
+                "Impossibile resettare il pannello principale!",
+                "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
+            );
+            return;
+        }
+        
+        // Testo personalizzato.
+        String text = animationTextField.getText().equals("") ? "Grest" : animationTextField.getText();
+        
+        WebView wv = new WebView();
+        wv.minHeightProperty().bind(mainController.bodyScroll.heightProperty());
+        wv.minWidthProperty().bind(mainController.body.widthProperty());
+        WebEngine we = wv.getEngine();
+        we.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+            if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+                we.executeScript("drawName(\"" + text + "\", [red, orange, green, blue, purple])");
+            }
+        });
+        we.load(getClass().getResource("/util/logo/index.html").toString());
+        
+        mainController.body.getChildren().add(wv);
+        wv.requestFocus();   
+    }
+    
+    // Elimina tutto il contenuto del pannello principale.
     @FXML private void handleResetButton()
     {
         if (mainController.terminateAll())
@@ -546,6 +654,7 @@ public class ControlPaneController implements Initializable {
         }
     }
     
+    // Restituisce una StringProperty legata alla distanza fra targetDateTime e la data attuale.
     private StringBinding getDateDiff()
     {
         // Stringa vuota se la data è null.

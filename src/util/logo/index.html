@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logo</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="alphabet.js"></script>
+    <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+    <script type="text/javascript" src="bubbles.js"></script>
+    <script type="text/javascript">
+        // I colori sono espressi in formato HSL (vedi http://www.w3schools.com/tags/ref_colorpicker.asp)
+        var red = [0, 100, 63];
+        var orange = [40, 100, 60];
+        var green = [75, 100, 40];
+        var blue = [196, 77, 55];
+        var purple = [280, 50, 60];
+        bubbleShape = 'circle';
+
+        drawName("", [red, orange, green, blue, purple]);
+        bounceBubbles();
+    </script>
+</body>
+</html>

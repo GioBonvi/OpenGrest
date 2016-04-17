@@ -1,4 +1,4 @@
-package mainpane;
+package mainpanel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import mediacontrol.MediaControl;
 
-public class MainPaneController implements Initializable
+public class MainPanelController implements Initializable
 {
     public DoubleProperty lastX = new SimpleDoubleProperty(-1.0);
     public DoubleProperty lastY = new SimpleDoubleProperty(-1.0);
@@ -23,7 +23,7 @@ public class MainPaneController implements Initializable
     public DoubleProperty lastW = new SimpleDoubleProperty(-1.0);
     public BooleanProperty isMaximized = new SimpleBooleanProperty(false);
     
-    @FXML public BorderPane rootPane;
+    @FXML public BorderPane rootPanel;
     @FXML public Label titleLabel;
     @FXML public Label subtitleLabel;
     @FXML public Label footerLabel;

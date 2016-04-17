@@ -1,7 +1,7 @@
 package opengrest;
 
 import util.AlertBox;
-import controlpane.ControlPaneController;
+import controlpanel.ControlPanelController;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -19,14 +19,14 @@ import javafx.stage.Stage;
 
 public class OpenGrest extends Application {
     
-    private ControlPaneController controller;
+    private ControlPanelController controller;
     
     @Override
     public void start(Stage stage) throws Exception {
         try
         {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/controlpane/ControlPane.fxml")
+                getClass().getResource("/controlpanel/ControlPanel.fxml")
             );
             Parent root = (Parent) loader.load();
             controller = loader.getController();
@@ -79,6 +79,7 @@ public class OpenGrest extends Application {
                     ));
                     controller.fontSizeCombo.setValue(String.valueOf(Integer.parseInt(lines.get(i++))));
                     controller.fontSizeLyricsCombo.setValue(lines.get(i++));
+                    controller.animationTextField.setText(lines.get(i++));
                 }
                 catch (Exception ex)
                 {
@@ -122,7 +123,7 @@ public class OpenGrest extends Application {
                     javafx.scene.control.Alert.AlertType.ERROR,
                     "Errore nel caricamento del file!",
                     "Errore interno al programma.",
-                    "Errore nel caricamenteo del file /mainpane/MainPane.fxml",
+                    "Errore nel caricamenteo del file /mainpanel/MainPanel.fxml",
                     ioEx
             );
         }
@@ -136,13 +137,13 @@ public class OpenGrest extends Application {
     {
         try (PrintWriter writer = new PrintWriter("settings.conf", "UTF-8"))
         {
-            // Salva le dimensioni di MainPane.
+            // Salva le dimensioni del pannello principale.
             writer.println(controller.mainController.lastX.doubleValue());
             writer.println(controller.mainController.lastY.doubleValue());
             writer.println(controller.mainController.lastW.doubleValue());
             writer.println(controller.mainController.lastH.doubleValue());
             writer.println(controller.mainController.isMaximized.get());
-            // Salva il contenuto di ControlPane.
+            // Salva il contenuto del pannello di controllo.
             // Titolo e sottotitolo
             writer.println(controller.titleField.getText());
             writer.println(controller.subtitleField.getText());
@@ -184,6 +185,8 @@ public class OpenGrest extends Application {
             writer.println(controller.fontSizeCombo.getValue());
             // Controllo testi canzoni.
             writer.println(controller.fontSizeLyricsCombo.getValue());
+            // Controllo animazioni.
+            writer.println(controller.animationTextField.getText());
             writer.close();
         }
         catch (FileNotFoundException ex)

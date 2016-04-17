@@ -22,6 +22,8 @@ Quest'ultimo permette di aggiungere, modificare o rimuovere contenuto dal pannel
 
  - aggiungere una file media (audio/video) con possibilità di autoplay, loop infinito e fullscreen;
 
+ - mostrare due particolari animazioni javascript (della neve che cade con un messaggio e una scritta colorata interattiva);
+
  - aggiungere una slideshow di immagini (prossimamente);
 
 ## Guida
@@ -96,6 +98,12 @@ I formati supportati sono: aif/aiff, flv, fxm, mp4/m4a/m4v, mp3, wav, m3u8. Può
 Questi file possono essere ovunque sul PC, ma è è consigliabile salvarli in una cartella "Media" nella stessa cartella dove è posizionato il programma OpenGrest.
 
 NB: non è possibile chiudere alcun pannello mentre un file è a tutto schermo: se ci si prova verrà visualizzato un popup di errore.
+
+### Animazioni
+
+Dopo aver iserito il testo desiderato nell'apposito spazio è possibile cliccare sui pulsanti "Neve" o "Logo" per mostrare l'animazione corrispondente. Nel caso dell'animazione "Logo" se il testo specificato è vuoto verrà mostrata la scritta "Grest".
+
+NB: l'animazione sostituisce completamente il contenuto del pannello principale, che verrà completamente ripulito.
 
 ### Pulsanti
 
