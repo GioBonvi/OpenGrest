@@ -619,7 +619,7 @@ public class ControlPanelController implements Initializable {
         }
         
         // Testo personalizzato.
-        String text = animationTextField.getText().equals("") ? "Grest" : animationTextField.getText();
+        String text = animationTextField.getText().replace(" ", "").equals("") ? "Grest" : animationTextField.getText();
         
         WebView wv = new WebView();
         wv.minHeightProperty().bind(mainController.bodyScroll.heightProperty());
