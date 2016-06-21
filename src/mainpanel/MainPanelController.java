@@ -9,10 +9,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import lyriccontrol.LyricControl;
 import mediacontrol.MediaControl;
 
 public class MainPanelController implements Initializable
@@ -24,9 +24,6 @@ public class MainPanelController implements Initializable
     public BooleanProperty isMaximized = new SimpleBooleanProperty(false);
     
     @FXML public BorderPane rootPanel;
-    @FXML public Label titleLabel;
-    @FXML public Label subtitleLabel;
-    @FXML public Label footerLabel;
     @FXML public ScrollPane bodyScroll;
     @FXML public VBox body;
     
@@ -54,7 +51,30 @@ public class MainPanelController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
+        // Quando viene premuto SHIFT o CONTROL tutti i "lyricControl" del
+        // pannello vanno avanti o indietro di una strofa/ritornello.
+        // Non uso le frecce perché servono per scorrere nel pannello esterno.
+        rootPanel.setOnKeyReleased((event) -> {
+            int jump = 0;
+            switch (event.getCode()) {
+                case SHIFT:
+                    jump = -1;
+                    break;
+                case CONTROL:
+                    jump = 1;
+                    break;
+            }
+            if (jump != 0)
+            {
+                for (Node node: body.getChildren())
+                {
+                    if (node.getClass() == LyricControl.class)
+                    {
+                        ((LyricControl) node).jump(jump);
+                    }
+                }
+            }
+        });
     }    
     
 }

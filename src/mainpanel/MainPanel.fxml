@@ -7,31 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="rootPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpanel.MainPanelController">
-   <top>
-      <VBox alignment="TOP_CENTER" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="titleLabel">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Label>
-            <Label fx:id="subtitleLabel">
-               <font>
-                  <Font name="System Italic" size="12.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
-   </top>
-   <bottom>
-      <HBox alignment="CENTER" prefHeight="48.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="footerLabel" />
-         </children>
-      </HBox>
-   </bottom>
    <center>
-      <ScrollPane fx:id="bodyScroll" prefViewportHeight="280.0" prefViewportWidth="580.0">
+      <ScrollPane fx:id="bodyScroll" prefViewportHeight="280.0" prefViewportWidth="580.0" BorderPane.alignment="CENTER">
          <content>
             <VBox fx:id="body" maxHeight="1.7976931348623157E308" prefHeight="200.0" style="-fx-background-color: rgba(0,0,0,0);" BorderPane.alignment="CENTER">
                <BorderPane.margin>

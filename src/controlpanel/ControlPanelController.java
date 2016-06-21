@@ -10,17 +10,11 @@ import mainpanel.MainPanelController;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,9 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -52,6 +44,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import lyriccontrol.LyricControl;
 import mediacontrol.MediaControl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,12 +63,6 @@ public class ControlPanelController implements Initializable {
     private Lyric lyricFile = null;
     
     // Opzioni principali.
-    @FXML public TextField titleField;
-    @FXML public TextField subtitleField;
-    @FXML public DatePicker datePicker;
-    @FXML public ComboBox<String> minuteCombo;
-    @FXML public ComboBox<String> hourCombo;
-    @FXML public TextField targetField;
     @FXML public ColorPicker backgroundColorPicker;
     @FXML public ImageView imgHelp;
     // Controllo testo.
@@ -220,15 +207,6 @@ public class ControlPanelController implements Initializable {
         }
         
         // Riempi i valori delle ComboBox
-        for (int i = 0; i < 60; i++)
-        {
-            String val = i < 10 ? "0" + i : String.valueOf(i);
-            minuteCombo.getItems().add(val);
-            if (i < 24)
-            {
-                hourCombo.getItems().add(val);
-            }
-        }
         fontStyleCombo.getItems().addAll("Nessuno", "Grassetto", "Corsivo", "Grassetto corsivo");
         fontStyleCombo.getSelectionModel().select(0);
         for (int i = 20; i <= 80; i += 2)
@@ -289,37 +267,6 @@ public class ControlPanelController implements Initializable {
     // Modifica titolo, sottotitolo e footer del pannello principale.
     @FXML private void handleApply()
     {
-        // Titolo
-        mainController.titleLabel.setText(titleField.getText());
-        // Sottotitolo
-        mainController.subtitleLabel.setText(subtitleField.getText());
-        
-        // Footer (countdown).
-        
-        // Estrai ora e minuto dalle ComboBox (controllo validità numero).
-        int min, hour;
-        try
-        {
-            min = Integer.parseInt(minuteCombo.getValue());
-        }
-        catch (Exception e)
-        {
-            min = 0;
-        }
-        try
-        {
-            hour = Integer.parseInt(hourCombo.getValue());
-        }
-        catch (Exception e)
-        {
-            hour = 0;
-        }
-        // Estrai la data dal DatePicker e controlla che non sia null.
-        // Aggiungi alla data l'ora e il minuto appena ottenuti.
-        targetDateTime = datePicker.getValue() == null ? null : datePicker.getValue().atTime(hour, min);
-        // Imposta il footer con i valori adeguati.
-        mainController.footerLabel.textProperty().bind(getDateDiff());
-        
         // Imposta il colore di sfondo.
         Color newColor = backgroundColorPicker.getValue();
         if (newColor != null)
@@ -457,37 +404,37 @@ public class ControlPanelController implements Initializable {
                 baseSize = 30;
                 fontSizeLyricsCombo.setValue("30");
             }
-            // Qui viene inserita la canzone.
-            TextFlow newTF = new TextFlow();
-            // Titotlo: grasssetto, 1.5 * baseSize.
+            
+            LyricControl lc = new LyricControl();
+            
+            // Titolo: grasssetto, 1.5 * baseSize.
             Text title = new Text(lyricFile.getTitle());
             title.setFont(Font.font("System", FontWeight.BOLD, (int) (baseSize * 1.5)));
-            newTF.getChildren().add(title);
-            // Strofe e ritornelli.
+            lc.setTitle(title);
+            
             for (LyricBlock block: lyricFile.blocks)
             {
                 // Strofa.
-                Text blockText = new Text("\n" + block.getText());
+                Text blockText = new Text(block.getText());
                 blockText.setFont(Font.font("System", baseSize));
                 // Ritornello.
                 if (block.getType() == BlockType.RIT)
                 {
                     blockText.setFont(Font.font("System", FontPosture.ITALIC, baseSize));
-                    blockText.setText("\n\n" + block.getText() + "\n");
+                    blockText.setText(block.getText());
                 }
-                newTF.getChildren().addAll(new Text(" "), blockText, new Text(" "));
+                lc.appendText(blockText);
             }
-            // inserisci il testo in una ScrollPane leggermente più piccola dello spazio disponibile.
-            ScrollPane scrPane = new ScrollPane(newTF);
-            scrPane.setMinHeight(mainController.bodyScroll.getHeight() * 85 / 100);
-            scrPane.setMaxHeight(mainController.bodyScroll.getHeight() * 85 / 100);
-            scrPane.setMinWidth(mainController.bodyScroll.getWidth() * 85 / 100);
-            scrPane.setMaxWidth(mainController.bodyScroll.getWidth() * 85 / 100);
-            mainController.body.getChildren().add(scrPane);
+            lc.setMinHeight(mainController.bodyScroll.getHeight() * 0.95);
+            lc.setMaxHeight(mainController.bodyScroll.getHeight() * 0.95);
+            lc.setMinWidth(mainController.bodyScroll.getWidth() * 0.95);
+            lc.setMaxWidth(mainController.bodyScroll.getWidth() * 0.95);
+            mainController.body.getChildren().add(lc);
             // Reset controllo.
             lyricsFileNameLabel.setText("Nessun file selezionato");
             lyricFile = null;
         }
+        
         addLyricsFileButton.setDisable(true);
     }
     
@@ -652,72 +599,5 @@ public class ControlPanelController implements Initializable {
                 "Sembra che ci sia un file multimediale in riproduzione a tutto schermo.\nChiudilo per continuare."
             );
         }
-    }
-    
-    // Restituisce una StringProperty legata alla distanza fra targetDateTime e la data attuale.
-    private StringBinding getDateDiff()
-    {
-        // Stringa vuota se la data è null.
-        if (targetDateTime == null)
-        {
-            return Bindings.createStringBinding(() -> {return "";}, new SimpleStringProperty(""));
-        }
-        // Altrimenti restituisci uno StringBinding contenente il countdown che
-        // viene aggiornato ogni secondo dalla oneSecTimeline.
-        return Bindings.createStringBinding(
-                () -> {
-                    // Ottiene instante attuale.
-                    LocalDateTime now = LocalDate.now().atTime(
-                            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                            Calendar.getInstance().get(Calendar.MINUTE),
-                            Calendar.getInstance().get(Calendar.SECOND)
-                    );
-                    // Ottieni distanaza fra adesso e targetDateTime.
-                    Duration dur = Duration.between(targetDateTime, now);
-
-                    // Costruisci il messaggio da mostrare.
-                    String message;
-                    boolean needsSingular =
-                            dur.abs().compareTo(Duration.ofDays(1)) >= 0
-                            && dur.abs().compareTo(Duration.ofDays(2)) < 0;
-                    // dur.isNegative() == true significa che la data è nel futuro.
-                    // needsSingular == true significa 1 giornO invece che 0 giornI o 3 giornI etc.
-                    if (dur.isNegative() && needsSingular)
-                    {
-                        message = targetField.getText().equals("") ? "" : targetField.getText() + ": ";
-                        message += "Manca %d giorno e %02d:%02d:%02d.";
-                    }
-                    else if(dur.isNegative())
-                    {
-                        message = targetField.getText().equals("") ? "" : targetField.getText() + ": ";
-                        message += "Mancano %d giorni e %02d:%02d:%02d.";
-                    }
-                    else if (needsSingular)
-                    {
-                        message = targetField.getText().equals("") ? "" : targetField.getText() + ": ";
-                        message += "È passato %d giorno e %02d:%02d:%02d.";
-                    }
-                    else
-                    {
-                        message = targetField.getText().equals("") ? "" : targetField.getText() + ": ";
-                        message += "Sono passati %d giorni e %02d:%02d:%02d.";
-                    }
-                    
-                    // Elimina eventuale segno meno.
-                    dur = dur.abs();
-                    // Calcola giorni, ore, minuti e secondi.
-                    long s = dur.getSeconds();
-                    long m = s / 60;
-                    long h = m / 60;
-                    long d = h / 24;
-                    s = s % 60;
-                    m = m % 60;
-                    h = h % 24;
-                    // Mostra il messaggio finale in formato "g e hh:mm:ss"
-                    return String.format(message, d, h, m, s);
-                },
-                // Aggiorna ogni secondo.
-                oneSecTimeline.currentTimeProperty()
-        );
     }
 }

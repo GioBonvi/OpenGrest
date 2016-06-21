@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
 import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -44,27 +43,6 @@ public class OpenGrest extends Application {
                     controller.mainController.lastW.set(Float.parseFloat(lines.get(i++)));
                     controller.mainController.lastH.set(Float.parseFloat(lines.get(i++)));
                     controller.mainController.isMaximized.set(Boolean.valueOf(lines.get(i++)));
-                    controller.titleField.setText(lines.get(i++));
-                    controller.subtitleField.setText(lines.get(i++));
-                    i+=2;
-                    if (! lines.get(i++).equals("0"))
-                    {
-                        LocalDate ldt = LocalDate.of(
-                            Integer.parseInt(lines.get(i - 3)),
-                            Integer.parseInt(lines.get(i - 2)),
-                            Integer.parseInt(lines.get(i - 1))
-                        );
-                        controller.datePicker.setValue(ldt);
-                    }
-                    if (! lines.get(i++).equals("null"))
-                    {
-                        controller.hourCombo.setValue(lines.get(i - 1));
-                    }
-                    if (! lines.get(i++).equals("null"))
-                    {
-                        controller.minuteCombo.setValue(lines.get(i - 1));
-                    }
-                    controller.targetField.setText(lines.get(i++));
                     controller.backgroundColorPicker.setValue(Color.rgb(
                             Integer.parseInt(lines.get(i++)),
                             Integer.parseInt(lines.get(i++)),
@@ -144,26 +122,6 @@ public class OpenGrest extends Application {
             writer.println(controller.mainController.lastH.doubleValue());
             writer.println(controller.mainController.isMaximized.get());
             // Salva il contenuto del pannello di controllo.
-            // Titolo e sottotitolo
-            writer.println(controller.titleField.getText());
-            writer.println(controller.subtitleField.getText());
-            // Data e ora countdown
-            LocalDate ld = controller.datePicker.getValue();
-            if (ld == null)
-            {
-                writer.println("0");
-                writer.println("0");
-                writer.println("0");
-            }
-            else
-            {
-                writer.println(controller.datePicker.getValue().getYear());
-                writer.println(controller.datePicker.getValue().getMonthValue());
-                writer.println(controller.datePicker.getValue().getDayOfMonth());
-            }
-            writer.println(controller.hourCombo.getValue());
-            writer.println(controller.minuteCombo.getValue());
-            writer.println(controller.targetField.getText());
             // Colore di sfondo.
             Color clr = (controller.backgroundColorPicker.getValue() != null
                     ? controller.backgroundColorPicker.getValue()
